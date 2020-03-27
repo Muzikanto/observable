@@ -1,14 +1,14 @@
 import React, {useContext} from 'react';
-import Ctx from "../main/ctx";
-import {FormConfig} from "../typings";
-import useStore from "../../Observable/hooks/useStore";
+import FormContext from "./FormContext";
+import useStore from "./useStore";
+import {FormConfig} from "./createForm";
 
 export interface SubmitProps<P extends object> {
     component: (props: { onClick: (e: React.MouseEvent<any>) => void; disabled: boolean; }) => JSX.Element;
 }
 
 function Submit<P extends object>(props: SubmitProps<P>) {
-    const ctx = useContext(Ctx) as FormConfig<any>;
+    const ctx = useContext(FormContext) as FormConfig<any>;
 
     const isValid = useStore(ctx.isValid);
     const Component = props.component as React.ComponentType<any>;

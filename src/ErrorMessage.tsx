@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import Ctx from "../main/ctx";
-import {FormConfig} from "../typings";
-import {getDeepValue} from "../helpers";
-import useSelector from "../../Observable/hooks/useSelector";
+import FormContext from "./FormContext";
+import {getDeepValue} from "./utils";
+import useSelector from "./useSelector";
+import {FormConfig} from "./createForm";
 
 export interface ErrorMessageProps<P extends { children: string | undefined }> {
     name: string;
@@ -10,7 +10,7 @@ export interface ErrorMessageProps<P extends { children: string | undefined }> {
 }
 
 function ErrorMessage<P extends { children: string | undefined }>(props: ErrorMessageProps<P>) {
-    const ctx = useContext(Ctx) as FormConfig<any>;
+    const ctx = useContext(FormContext) as FormConfig<any>;
 
     const error = useSelector(ctx.errors, (state) => {
         return getDeepValue<string | undefined>(state, props.name)

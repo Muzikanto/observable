@@ -1,4 +1,4 @@
-import deepCopy from "../../helpers/deepCopy";
+import {deepCopy} from "./utils";
 
 type Listener<T> = (val: T) => void;
 

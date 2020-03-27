@@ -1,8 +1,8 @@
 import {useContext} from 'react';
-import {FormConfig} from "../typings";
-import Ctx from "../main/ctx";
-import * as helpers from '../helpers';
-import useSelector from "../../Observable/hooks/useSelector";
+import FormContext from "./FormContext";
+import * as helpers from './utils';
+import useSelector from "./useSelector";
+import {FormConfig} from "./createForm";
 
 export type FieldValidator<Value> = (value: Value) => string | null | void;
 
@@ -12,7 +12,7 @@ export interface FieldProps<Value> {
 }
 
 function useField<Value>(props: FieldProps<Value>) {
-    const ctx = useContext(Ctx) as FormConfig<any>;
+    const ctx = useContext(FormContext) as FormConfig<any>;
 
     const value = useSelector(ctx.values, (state) => {
         return helpers.getDeepValue<Value>(state, props.name)

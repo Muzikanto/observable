@@ -1,5 +1,5 @@
 import React from 'react';
-import Observable from '../main/Observable';
+import Observable from './Observable';
 
 function useStore<T>(observable: Observable<T>): T {
     const [val, setVal] = React.useState(observable.get());

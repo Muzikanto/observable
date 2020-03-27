@@ -1,4 +1,4 @@
-import {FormErrors} from '../typings';
+import {FormErrors} from "./createForm";
 
 function getDeepValue<Value>(state: any, path: string): Value {
     const arr = path.split('.');
@@ -67,7 +67,23 @@ function checkExistsError(errors: FormErrors<any>): boolean {
     return false;
 }
 
+function deepCopy<S>(state: S): S {
+    if (typeof state !== 'object' || state instanceof Date) {
+        return state;
+    }
+
+    const result: any = Array.isArray(state) ? [] : {};
+
+    // tslint:disable-next-line:forin
+    for (const key in state) {
+        result[key] = deepCopy(state[key]);
+    }
+
+    return result;
+}
+
 export {
+    deepCopy,
     getDeepValue,
     setDeepValue,
     checkExistsError,

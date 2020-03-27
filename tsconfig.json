@@ -3,7 +3,7 @@
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": false,
-    "target": "es6",
+    "target": "es5",
     "jsx": "react",
     "types": [
       "react",
@@ -17,7 +17,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "strict": true,
-    "outDir": "build",
+    "outDir": "dist",
     "baseUrl": "src",
     "typeRoots": [
       "node_modules/@types"
@@ -41,6 +41,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./src/utils.ts"
   ]
 }

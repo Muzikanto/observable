@@ -1,5 +1,5 @@
 import React from 'react';
-import Observable from '../main/Observable';
+import Observable from './Observable';
 
 function useSelector<T, V>(observable: Observable<T>, selector: (state: T) => V): V {
     const [val, setVal] = React.useState(selector(observable.get()));

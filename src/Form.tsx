@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Ctx from '../main/ctx';
-import {FormConfig, Omit} from '../typings';
+import Ctx from './FormContext';
+import {FormConfig} from "./createForm";
 
 export interface FormContextProps<State extends object> {
    form: FormConfig<State>;

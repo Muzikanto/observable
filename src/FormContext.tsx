@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormConfig } from '../typings';
+import {FormConfig} from "./createForm";
 
 // @ts-ignore
 const FormContext = React.createContext<FormConfig<any>>(null);
