@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
+    "target": "es6",
+    "jsx": "react",
+    "types": [
+      "react",
+      "node"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "declaration": true,
+    "removeComments": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "outDir": "build",
+    "baseUrl": "src",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "strictNullChecks": true,
+    "allowJs": false,
+    "inlineSourceMap": false,
+    "lib": [
+      "es6",
+      "dom",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
