@@ -116,6 +116,7 @@ createForm
 
 create Fields
 ```typescript jsx
+    // useField extends useSelector
     import useField from "@muzikanto/observable/lib/useField";
 
     function Field(props: { name: string }) {
@@ -136,6 +137,7 @@ create Fields
     }
     
     function FieldArray(props: { name: string }) {
+        // useFieldArray extends useField
         import useFieldArray from "@muzikanto/observable/lib/useFieldArray";
 
         const {

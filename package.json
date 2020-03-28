@@ -1,6 +1,6 @@
 {
   "name": "@muzikanto/observable",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "clean": "rm -rf lib",
     "build": "tsc -b",
@@ -15,6 +15,7 @@
     "@types/react-dom": "16.9",
     "@types/yup": "0.26.33"
   },
+  "homepage": "https://github.com/Muzikanto/observable",
   "keywords": [
     "react",
     "observable",
