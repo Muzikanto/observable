@@ -13,13 +13,12 @@ base
   const add = createEvent<number>();
   const remove = createEvent<number>();
   
-  const off1 = store.on(add, (state, payload) => {
+  store.on(add, (state, payload) => {
      return state + payload;
   });
-   const off2 =store.on(remove, (state, payload) => {
+  store.on(remove, (state, payload) => {
       return state - payload;
   });
-  const unWatch = store.watch(console.log);
 
   function Component() {
     const state = useStore(store);
@@ -50,12 +49,14 @@ advanced
   const addOne = createEvent<number>();
   const addTwo = createEvent<number>();
   
-  store.on(addOne, (state, payload) => {
+  const off1 = store.on(addOne, (state, payload) => {
      return {...state, one: state.one + payload}
   });
-  store.on(addTwo, (state, payload) => {
+  const off2 = store.on(addTwo, (state, payload) => {
      return {...state, two: state.two + payload}
   });
+  
+  const unWatch = store.watch(console.log);
 
   function OnePreview() {
     const state: number = useSelector(store, (state) => state.one);
@@ -131,6 +132,8 @@ create Fields
 ```typescript jsx
     // useField extends useSelector
     import useField from "@muzikanto/observable/lib/useField";
+    // useFieldArray extends useField
+    import useFieldArray from "@muzikanto/observable/lib/useFieldArray";
 
     function Field(props: { name: string }) {
         const {
@@ -150,9 +153,6 @@ create Fields
     }
     
     function FieldArray(props: { name: string }) {
-        // useFieldArray extends useField
-        import useFieldArray from "@muzikanto/observable/lib/useFieldArray";
-
         const {
             value, push, pop, swap, clear,
         } = useFieldArray<string>({name: props.name});
