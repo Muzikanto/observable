@@ -1,6 +1,6 @@
 {
   "name": "@muzikanto/observable",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The state manager",
   "license": "MIT",
   "maintainers": [
@@ -13,7 +13,8 @@
     "react",
     "observable",
     "form",
-    "store"
+    "store",
+    "state-manager"
   ],
   "scripts": {
     "clean": "rm -rf lib",

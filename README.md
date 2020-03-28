@@ -1,6 +1,6 @@
 ## Observer Observer-form
 
-### Observer
+### Store
 
 base
 ```typescript jsx
@@ -13,13 +13,13 @@ base
   const add = createEvent<number>();
   const remove = createEvent<number>();
   
-  store.on(add, (state, payload) => {
+  const off1 = store.on(add, (state, payload) => {
      return state + payload;
   });
-  store.on(remove, (state, payload) => {
+   const off2 =store.on(remove, (state, payload) => {
       return state - payload;
   });
-  store.watch(console.log);
+  const unWatch = store.watch(console.log);
 
   function Component() {
     const state = useStore(store);
@@ -42,9 +42,10 @@ base
 advanced
 ```typescript jsx
   import useSelector from "@muzikanto/observable/lib/useSelector";
-  import Observable from "@muzikanto/observable/lib/Observable";
+  import createStore from "@muzikanto/observable/lib/createStore";
+  import createEvent from "@muzikanto/observable/lib/createEvent";
 
-  const store = new Observable({one: 1, two: 2});
+  const store = createStore({one: 1, two: 2});
   
   const addOne = createEvent<number>();
   const addTwo = createEvent<number>();
@@ -90,7 +91,8 @@ advanced
             render only: TwoPreview
   */
 ```
-
+ 
+----------
 ### Form
 
 createForm
