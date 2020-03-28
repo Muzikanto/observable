@@ -6,14 +6,26 @@ base
 ```typescript jsx
   import useStore from "@muzikanto/observable/lib/useStore";
   import createStore from "@muzikanto/observable/lib/createStore";
+  import createEvent from "@muzikanto/observable/lib/createEvent";
 
-  const store = new createStore<number>(1);
+  const store = createStore<number>(1);
+  
+  const add = createEvent<number>();
+  const remove = createEvent<number>();
+  
+  store.on(add, (state, payload) => {
+     return state + payload;
+  });
+  store.on(remove, (state, payload) => {
+      return state - payload;
+  });
+  store.watch(console.log);
 
   function Component() {
     const state = useStore(store);
     
-    const onAdd = () => store.set(store.get() + 1);
-    const onRemove = () => store.set(store.get() - 1);
+    const onAdd = () => add(2);
+    const onRemove = () => remove(1);
     const onReset = () => store.reset();
     
     return (
@@ -33,6 +45,16 @@ advanced
   import Observable from "@muzikanto/observable/lib/Observable";
 
   const store = new Observable({one: 1, two: 2});
+  
+  const addOne = createEvent<number>();
+  const addTwo = createEvent<number>();
+  
+  store.on(addOne, (state, payload) => {
+     return {...state, one: state.one + payload}
+  });
+  store.on(addTwo, (state, payload) => {
+     return {...state, two: state.two + payload}
+  });
 
   function OnePreview() {
     const state: number = useSelector(store, (state) => state.one);
@@ -51,23 +73,12 @@ advanced
     }
     
   function Main() {
-      const onAddOne = () => {
-          const oldState = store.get();
-
-          store.set({...oldState, one: oldState.one + 1});
-      };
-      const onAddTwo = () => {
-            const oldState = store.get();
-      
-            store.set({...oldState, two: oldState.two + 1});
-        };
-      
       return (
           <>
             <OnePreview/>
             <TwoPreview/>
-            <button onClick={onAddOne}>add-one</button>
-            <button onClick={onAddTwo}>add-two</button>
+            <button onClick={() => addOne(1)}>add-one</button>
+            <button onClick={() => addTwo(2)}>add-two</button>
           </>
       );
   }

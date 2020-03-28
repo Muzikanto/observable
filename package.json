@@ -1,6 +1,20 @@
 {
   "name": "@muzikanto/observable",
-  "version": "1.0.4",
+  "version": "1.1.0",
+  "description": "The state manager",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Maxim Schiriy"
+    }
+  ],
+  "homepage": "https://github.com/Muzikanto/observable",
+  "keywords": [
+    "react",
+    "observable",
+    "form",
+    "store"
+  ],
   "scripts": {
     "clean": "rm -rf lib",
     "build": "tsc -b",
@@ -15,13 +29,6 @@
     "@types/react-dom": "16.9",
     "@types/yup": "0.26.33"
   },
-  "homepage": "https://github.com/Muzikanto/observable",
-  "keywords": [
-    "react",
-    "observable",
-    "form",
-    "store"
-  ],
   "dependencies": {},
   "devDependencies": {
     "@types/node": "13.9.5",
