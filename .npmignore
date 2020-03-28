@@ -4,4 +4,4 @@
 tsconfig.json
 tslint.json
 src
-webpack.config.js
+node_modules/

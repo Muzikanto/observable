@@ -1,11 +1,11 @@
-## Observer-form
+## Observer Observer-form
 
 ### Observer
 
 base
 ```typescript jsx
-  import useStore from "@muzikanto/observable/dist/useStore";
-  import createStore from "@muzikanto/observable/dist/createStore";
+  import useStore from "@muzikanto/observable/lib/useStore";
+  import createStore from "@muzikanto/observable/lib/createStore";
 
   const store = new createStore<number>(1);
 
@@ -29,8 +29,8 @@ base
 
 advanced
 ```typescript jsx
-  import useSelector from "@muzikanto/observable/dist/useSelector";
-  import Observable from "@muzikanto/observable/dist/Observable";
+  import useSelector from "@muzikanto/observable/lib/useSelector";
+  import Observable from "@muzikanto/observable/lib/Observable";
 
   const store = new Observable({one: 1, two: 2});
 
@@ -82,8 +82,9 @@ advanced
 
 ### Form
 
-example
+createForm
 ```typescript jsx
+    import createForm from "@muzikanto/observable/lib/createForm";
     import * as Yup from 'yup';
 
     interface State {
@@ -111,7 +112,12 @@ example
         },
         validationSchema,
     });
-    
+```
+
+create Fields
+```typescript jsx
+    import useField from "@muzikanto/observable/lib/useField";
+
     function Field(props: { name: string }) {
         const {
             value, error, touched,
@@ -130,6 +136,8 @@ example
     }
     
     function FieldArray(props: { name: string }) {
+        import useFieldArray from "@muzikanto/observable/lib/useFieldArray";
+
         const {
             value, push, pop, swap, clear,
         } = useFieldArray<string>({name: props.name});
@@ -148,12 +156,15 @@ example
             </>
         );
     }
-    
+```
+
+example use
+```typescript jsx
+    import Form from "@muzikanto/observable/lib/Form";
+
     function Main() {
         return (
-            <Form 
-                form={form}
-            >
+            <Form form={form}>
                <FormTextField name="text"/>
                <FormTextField name="field"/>
                <FormTextField name="deep.one"/>
