@@ -1,7 +1,7 @@
 .idea
 .gitignore
 .npmrc
+node_modules/
+src
 tsconfig.json
 tslint.json
-src
-node_modules/

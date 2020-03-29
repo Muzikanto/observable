@@ -1,14 +1,7 @@
-export type Event<P> = ((payload: P) => void) & {listeners: Array<(payload: P) => void>};
+import Event, {IEvent} from './Event';
 
-function createEvent<P>(): Event<P> {
-    const listeners: Array<(payload: P) => void> = [];
-
-    const event = (payload: P) => {
-        event.listeners.forEach(el => el(payload));
-    };
-    event.listeners = listeners;
-
-    return event as unknown as Event<P>;
+function createEvent<P>(): IEvent<P> {
+    return new Event<P>().call;
 }
 
 export default createEvent;

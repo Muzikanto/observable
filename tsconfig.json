@@ -5,10 +5,6 @@
     "sourceMap": false,
     "target": "es6",
     "jsx": "react",
-    "types": [
-      "react",
-      "node"
-    ],
     "module": "esnext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -19,9 +15,6 @@
     "strict": true,
     "outDir": "lib",
     "baseUrl": "src",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "strictNullChecks": true,
     "allowJs": false,
     "inlineSourceMap": false,

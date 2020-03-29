@@ -1,7 +1,7 @@
 import {deepCopy} from "./utils";
-import {Event} from "./createEvent";
+import {IEvent} from "./Event";
 
-type Listener<T> = (val: T) => void;
+export type Listener<T> = (val: T) => void;
 
 class Observable<T> {
     protected listeners: Array<{ event: Listener<T>, selector?: (state: T) => any }> = [];
@@ -40,15 +40,15 @@ class Observable<T> {
         this.set(deepCopy(this.initialValue));
     }
 
-    public on<P>(event: Event<P>, handler: (state: T, payload: P) => T) {
+    public on<P>(event: IEvent<P>, handler: (state: T, payload: P) => T) {
         const changeFunc = (payload: P) => {
             this.set(handler(this.get(), payload));
         };
 
-        event.listeners.push(changeFunc);
+        event.prototype.listeners.push(changeFunc);
 
         return () => {
-            event.listeners = event.listeners.filter(l => l !== changeFunc);
+            event.prototype.listeners = event.prototype.listener.filter((l: Listener<P>) => l !== changeFunc);
         };
     }
 
