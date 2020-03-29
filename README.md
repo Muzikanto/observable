@@ -1,8 +1,20 @@
-## Observer Observer-form
+## Observable and Observable-form
 
-### Store
+Observable: instead (effector 692 kB or redux 163 kB)
+Observable-form: instead (formik 927 kB)
 
-base
+- create store
+- listen store changes
+- listen store object part change
+- create event and subscribe store to event
+- create effect and subscribe events (done, fail, loading)
+- create form with yup validation 
+- create your fields (partial rendering)
+- override Event, Effect, Observable if you need
+
+### Observable
+
+example
 ```typescript jsx
   import useStore from "@muzikanto/observable/lib/useStore";
   import createStore from "@muzikanto/observable/lib/createStore";
@@ -49,14 +61,20 @@ advanced
   const addOne = createEvent<number>();
   const addTwo = createEvent<number>();
   
-  const off1 = store.on(addOne, (state, payload) => {
+  const unWatchOne = store.on(addOne, (state, payload) => {
      return {...state, one: state.one + payload}
   });
-  const off2 = store.on(addTwo, (state, payload) => {
+  const unWatchTwo = store.on(addTwo, (state, payload) => {
      return {...state, two: state.two + payload}
   });
   
-  const unWatch = store.watch(console.log);
+  const unWatchLog = store.watch(console.log);
+  
+  const onClickUnwatch = () => {
+      unWatchOne();
+      unWatchTwo();
+      unWatchLog();
+  }
 
   function OnePreview() {
     const state: number = useSelector(store, (state) => state.one);
@@ -81,6 +99,7 @@ advanced
             <TwoPreview/>
             <button onClick={() => addOne(1)}>add-one</button>
             <button onClick={() => addTwo(2)}>add-two</button>
+            <button onClick={onClickUnwatch}>unWatch</button>
           </>
       );
   }
@@ -94,7 +113,7 @@ advanced
 ```
  
 ----------
-### Form
+### Observable-form
 
 createForm
 ```typescript jsx

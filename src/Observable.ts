@@ -48,7 +48,7 @@ class Observable<T> {
         event.prototype.listeners.push(changeFunc);
 
         return () => {
-            event.prototype.listeners = event.prototype.listener.filter((l: Listener<P>) => l !== changeFunc);
+            event.prototype.listeners = event.prototype.listeners.filter((l: Listener<P>) => l !== changeFunc);
         };
     }
 

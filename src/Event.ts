@@ -6,12 +6,10 @@ class Event<P> {
     protected listeners: Array<Listener<P>> = [];
 
     constructor() {
-        this.call.prototype = {
-            listeners: this.listeners,
-        };
+        this.call.prototype = this;
     }
 
-    public call(payload: P) {
+    public call = (payload: P) => {
         this.listeners.forEach(l => l(payload));
     }
 }
