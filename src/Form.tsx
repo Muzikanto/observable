@@ -2,7 +2,7 @@ import * as React from 'react';
 import Ctx from './FormContext';
 import {FormConfig} from "./createForm";
 
-export interface FormContextProps<State extends object> {
+export interface FormProps<State extends object> {
    form: FormConfig<State>;
    children: React.ReactNode;
 
@@ -13,7 +13,7 @@ export interface FormContextProps<State extends object> {
    >;
 }
 
-function Form<State extends object>(props: FormContextProps<State>) {
+function Form<State extends object>(props: FormProps<State>) {
    return (
       <Ctx.Provider value={props.form}>
          <form

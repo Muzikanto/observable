@@ -1,7 +1,27 @@
 ## Observable and Observable-form
 
-Observable: instead (effector 692 kB or redux 163 kB)
-Observable-form: instead (formik 927 kB)
+[![dependencies Status](https://david-dm.org/muzikanto/observable/status.svg)](https://david-dm.org/muzikanto/observable)
+[![size](https://img.shields.io/bundlephobia/minzip/@muzikanto/observable)](https://bundlephobia.com/result?p=@muzikanto/observable)
+
+<!-- TOC -->
+
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Examples](#examples)
+  - [change with Event](#Change with Event)
+  - [subscribe two stores (React)](#Subscribe two stores)
+  - [Create form with validation](#Create form with validation)
+  - [Create form Fields](#Create form Fields)
+  - [Use Form and Fields](#Use Form and Fields)
+- [API](#api)
+  - [Event](#event)
+  - [Effect](#effect)
+  - [Store](#store)
+- [License](#license)
+
+<!-- /TOC -->
+
+## Introduction
 
 - create store
 - listen store changes
@@ -12,67 +32,58 @@ Observable-form: instead (formik 927 kB)
 - create your fields (partial rendering)
 - override Event, Effect, Observable if you need
 
-### Observable
+## Installation
 
-example
+```sh
+npm i @muzikanto/observable
+# or
+yarn add @muzikanto/observable
+```
+
+## Examples
+### Change with Event
+
 ```typescript jsx
-  import useStore from "@muzikanto/observable/lib/useStore";
   import createStore from "@muzikanto/observable/lib/createStore";
   import createEvent from "@muzikanto/observable/lib/createEvent";
 
   const store = createStore<number>(1);
-  
-  const add = createEvent<number>();
-  const remove = createEvent<number>();
-  
-  store.on(add, (state, payload) => {
-     return state + payload;
-  });
-  store.on(remove, (state, payload) => {
-      return state - payload;
-  });
+  const append = createEvent<number>();
+  const change = createEvent<number>();
 
-  function Component() {
-    const state = useStore(store);
-    
-    const onAdd = () => add(2);
-    const onRemove = () => remove(1);
-    const onReset = () => store.reset();
-    
-    return (
-        <>
-            <div>{state}</div>
-            <button onClick={onAdd}>add</button>
-            <button onClick={onRemove}>remove</button>
-            <button onClick={onReset}>reset</button>
-        </>
-    );
-  }
+  store.on(append, (state, payload) => state + payload);
+  store.on(append, (state, payload) => payload);
+  
+  append(2); // 3
+  change(-2); // -2
+  store.reset(); // 1
 ```
 
-advanced
+[Run in CodeBox](https://codesandbox.io/s/romantic-thunder-446dc)
+
+---
+
+### Subscribe two stores
 ```typescript jsx
   import useSelector from "@muzikanto/observable/lib/useSelector";
   import createStore from "@muzikanto/observable/lib/createStore";
   import createEvent from "@muzikanto/observable/lib/createEvent";
 
   const store = createStore({one: 1, two: 2});
-  
-  const addOne = createEvent<number>();
-  const addTwo = createEvent<number>();
-  
-  const unWatchOne = store.on(addOne, (state, payload) => {
+  const appendOne = createEvent<number>();
+  const appendTwo = createEvent<number>();
+
+  const unWatchAppendOne = store.on(appendOne, (state, payload) => {
      return {...state, one: state.one + payload}
   });
-  const unWatchTwo = store.on(addTwo, (state, payload) => {
+  const unWatchAppendTwo = store.on(appendOne, (state, payload) => {
      return {...state, two: state.two + payload}
   });
-  
   const unWatchLog = store.watch(console.log);
   
   const onClickUnwatch = () => {
-      unWatchOne();
-      unWatchTwo();
+      unWatchAppendOne();
+      unWatchAppendTwo();
       unWatchLog();
   }
 
@@ -97,25 +108,25 @@ advanced
           <>
             <OnePreview/>
             <TwoPreview/>
-            <button onClick={() => addOne(1)}>add-one</button>
-            <button onClick={() => addTwo(2)}>add-two</button>
+            <button onClick={() => appendOne(1)}>append-one</button>
+            <button onClick={() => appendTwo(2)}>append-two</button>
             <button onClick={onClickUnwatch}>unWatch</button>
           </>
       );
   }
   
   /*
-       click: add-one
+       click: append-one
             render only: OnePreview
-       click: add-two
+       click: append-two
             render only: TwoPreview
   */
 ```
  
 ----------
-### Observable-form
 
-createForm
+### Create form with validation
+
 ```typescript jsx
     import createForm from "@muzikanto/observable/lib/createForm";
     import * as Yup from 'yup';
@@ -147,7 +158,8 @@ createForm
     });
 ```
 
-create Fields
+### Create form Fields
+
 ```typescript jsx
     // useField extends useSelector
     import useField from "@muzikanto/observable/lib/useField";
@@ -192,7 +204,8 @@ create Fields
     }
 ```
 
-example use
+### Use Form and Fields
+
 ```typescript jsx
     import Form from "@muzikanto/observable/lib/Form";
 
@@ -223,3 +236,61 @@ example use
         );
     }
 ```
+
+## Api
+
+### Store
+
+```typescript
+    // create 
+    const store = createStore<number>(1);
+    // multiple watch changes 
+    store.watch(console.log);
+```
+
+### Event
+
+```typescript
+    // create 
+    const event = createEvent<number>();
+    // call
+    event(1);
+    // subscribe in store
+    const unwatchFunc = store.on(event, (state: StoreState, payload: number) => {
+       // todo
+       return payload; 
+    });
+    // Unwatch event
+    unwatchFunc();
+```
+
+### Effect
+
+```typescript
+    type Request = {param: number};
+
+    // create 
+    const effect = createEffect<Request, Response, Error>(async (params: Request) => {
+        try {
+            const response = await axios.get('https://example.com', {params});
+                    
+            return response;
+        } catch (e) {
+          throw e;
+        }
+    });
+    
+    // subscribe in store
+    storeDone.on(effect.done, (_, payload) => payload);
+    storeFail.on(effect.fail, (_, payload) => payload);
+    storeLoading.on(effect.loading, (_, payload) => payload);
+
+    // call
+    event({param: 1})
+        .then(response => console.log(response))
+        .catch(err => console.log(err));
+```
+
+## License
+
+[MIT](LICENSE)
