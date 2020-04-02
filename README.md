@@ -14,9 +14,11 @@
   - [Create form Fields](#create-form-fields)
   - [Use Form and Fields](#use-form-and-fields)
 - [API](#api)
-  - [Event](#event)
-  - [Effect](#effect)
-  - [Store](#store)
+  - [createStore](#createstore)
+  - [createEvent](#createevent)
+  - [createEffect](#createeffect)
+  - [createApi](#createapi)
+  - [forward](#forward)
 - [License](#license)
 
 <!-- /TOC -->
@@ -239,7 +241,7 @@ yarn add @muzikanto/observable
 
 ## Api
 
-### Store
+### createStore
 
 ```typescript
     // create 
@@ -248,7 +250,7 @@ yarn add @muzikanto/observable
     store.watch(console.log);
 ```
 
-### Event
+### createEvent
 
 ```typescript
     // create 
@@ -264,7 +266,7 @@ yarn add @muzikanto/observable
     unwatchFunc();
 ```
 
-### Effect
+### createEffect
 
 ```typescript
     type Request = {param: number};
@@ -290,6 +292,37 @@ yarn add @muzikanto/observable
         .then(response => console.log(response))
         .catch(err => console.log(err));
 ```
+
+### createApi
+```typescript jsx
+    const api = createApi(1, {
+        increment: (state, payload: number) => state + payload,
+        change: (state, payload: string) => payload.length,
+    });
+    
+    api.increment(2);
+    api.change('test');
+
+    /*
+        {
+            store: Store<number>,
+            increment: IEvent<number>,
+            change: IEvent<string>,
+        }
+     */
+```
+
+### forward
+```typescript jsx
+    const one = createEvent<number>();
+    const two = createEvent<number>();
+    
+    two.watch(console.log);
+
+    forward(one, two);
+    
+    one(3); // log: 3
+````
 
 ## License
 

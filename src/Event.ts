@@ -1,16 +1,28 @@
 import {Listener} from "./Observable";
 
-export type IEvent<P> = (payload: P) => void;
+export type IEvent<P> = ((payload: P) => void) & {
+    watch: (watcher: Listener<P>) => void;
+};
 
 class Event<P> {
     protected listeners: Array<Listener<P>> = [];
 
+    public call: IEvent<P>;
+
     constructor() {
-        this.call.prototype = this;
+        // @ts-ignore
+        this.call = (payload: P) => {
+            this.listeners.forEach(l => l(payload));
+        };
+        this.call.watch = this.watch;
     }
 
-    public call = (payload: P) => {
-        this.listeners.forEach(l => l(payload));
+    public watch = (watcher: Listener<P>)  => {
+        this.listeners.push(watcher);
+
+        return () => {
+            this.listeners = this.listeners.filter(l => l !== watcher);
+        }
     }
 }
 

@@ -2,12 +2,13 @@ import {deepCopy} from "./utils";
 import {IEvent} from "./Event";
 
 export type Listener<T> = (val: T) => void;
+export type Store<T> = Observable<T>;
 
 class Observable<T> {
     protected listeners: Array<{ event: Listener<T>, selector?: (state: T) => any }> = [];
     protected initialValue: T;
     protected value: T;
-    protected watchers: Array<Listener<any>> = [];
+    protected watchers: Array<Listener<T>> = [];
 
     constructor(value: T) {
         this.value = deepCopy(value);
@@ -22,6 +23,8 @@ class Observable<T> {
         if (this.value !== val) {
             this.value = val;
             this.listeners.forEach(l => l.event(l.selector ? l.selector(val) : val));
+            this.watchers.forEach(l => l(val));
+
             setTimeout(() => {
                 this.watchers.forEach(l => l(val));
             }, 0);
@@ -45,11 +48,7 @@ class Observable<T> {
             this.set(handler(this.get(), payload));
         };
 
-        event.prototype.listeners.push(changeFunc);
-
-        return () => {
-            event.prototype.listeners = event.prototype.listeners.filter((l: Listener<P>) => l !== changeFunc);
-        };
+        return event.watch(changeFunc);
     }
 
     public watch(handler: (state: T) => void) {
