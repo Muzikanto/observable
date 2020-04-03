@@ -1,6 +1,6 @@
 import * as helpers from './utils';
 import {Schema} from 'yup';
-import Observable from "./Observable";
+import Observable, {Store} from "./Observable";
 
 export type FormErrors<State extends object> = {
     [k in keyof State]?: State[k] extends object ? FormErrors<State[k]> : string | undefined;
@@ -11,10 +11,10 @@ export type FormTouched<State extends object> = {
 };
 
 export interface FormConfig<State extends object> {
-    values: Observable<State>;
-    errors: Observable<FormErrors<State>>;
-    touched: Observable<FormTouched<State>>;
-    isValid: Observable<boolean>;
+    values: Store<State>;
+    errors: Store<FormErrors<State>>;
+    touched: Store<FormTouched<State>>;
+    isValid: Store<boolean>;
 
     setValue: (params: { key: string; value: any; validate?: boolean; }) => void;
     setError: (params: { key: string; value: string | undefined }) => void;

@@ -18,7 +18,9 @@
   - [createEvent](#createevent)
   - [createEffect](#createeffect)
   - [createApi](#createapi)
+  - [combine](#combine)
   - [forward](#forward)
+  - [createForm](#createform)
 - [License](#license)
 
 <!-- /TOC -->
@@ -124,8 +126,6 @@ yarn add @muzikanto/observable
             render only: TwoPreview
   */
 ```
- 
-----------
 
 ### Create form with validation
 
@@ -312,6 +312,21 @@ yarn add @muzikanto/observable
      */
 ```
 
+### combine
+```typescript jsx
+     const one = createStore('Hello ');
+     const two = createStore('World');
+ 
+     const combinedStore = combine({
+         map: {one, two},
+         func: ({one, two}) => {
+             return one + ' ' + two;
+         },
+     });
+     
+     combinedStore.get(); // Hello World
+```
+
 ### forward
 ```typescript jsx
     const one = createEvent<number>();
@@ -323,6 +338,39 @@ yarn add @muzikanto/observable
     
     one(3); // log: 3
 ````
+
+### createForm
+with yup validation
+
+```typescript jsx
+    import * as Yup from 'yup';
+
+    interface State {
+        text: string;
+        field: string;
+        deep: {
+            one: string;
+            two: string;
+        };
+        arr: string[];
+    }
+    
+    const validationSchema = Yup.object().shape({
+        text: Yup.string().required().max(5),
+        field: Yup.string().required().max(3),
+    });
+    
+    const form = createForm<State>({
+        validateOnCreate: false,
+        initialState: {
+            text: '123',
+            field: '',
+            deep: {one: '1', two: ''},
+            arr: ['1', '2', '3'],
+        },
+        validationSchema,
+    });
+```
 
 ## License
 
