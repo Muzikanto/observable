@@ -1,6 +1,9 @@
 import * as helpers from './utils';
 import {Schema} from 'yup';
-import Observable, {Store} from "./Observable";
+import {Store} from "./Observable";
+import createStore from "./createStore";
+import createEvent from "./createEvent";
+import {IEvent} from "./Event";
 
 export type FormErrors<State extends object> = {
     [k in keyof State]?: State[k] extends object ? FormErrors<State[k]> : string | undefined;
@@ -16,13 +19,13 @@ export interface FormConfig<State extends object> {
     touched: Store<FormTouched<State>>;
     isValid: Store<boolean>;
 
-    setValue: (params: { key: string; value: any; validate?: boolean; }) => void;
-    setError: (params: { key: string; value: string | undefined }) => void;
-    setTouched: (params: { key: string; value: boolean }) => void;
+    setValue: IEvent<{ key: string; value: any; validate?: boolean; }>;
+    setError: IEvent<{ key: string; value: string | undefined }>;
+    setTouched: IEvent<{ key: string; value: boolean }>;
 
-    submit: () => void;
-    reset: () => void;
-    validate: () => void;
+    submit: IEvent<void>;
+    reset: IEvent<void>;
+    validate: IEvent<void>;
     validateAt: (key: string) => void;
 }
 
@@ -35,21 +38,23 @@ export interface FormParams<State extends object> {
     validateOnCreate?: boolean;
 
     onSubmit?: (state: State) => void;
-    onChange?: (state: State) => void;
 }
 
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 function createForm<State extends object>(props: FormParams<State>): FormConfig<State> {
-    const values = new Observable<State>(props.initialState);
-    const errors = new Observable<FormErrors<State>>(props.initialErrors || {});
-    const touched = new Observable<FormTouched<State>>(props.initialTouched || {});
-    const isValid = new Observable<boolean>(true);
+    const values = createStore<State>(props.initialState);
+    const errors = createStore<FormErrors<State>>(props.initialErrors || {});
+    const touched = createStore<FormTouched<State>>(props.initialTouched || {});
+    const isValid = createStore<boolean>(true);
+
+    const setValue = createEvent<{ key: string; value: any; validate?: boolean }>();
+    const setError = createEvent<{ key: string; value: string | undefined }>();
+    const setTouched = createEvent<{ key: string; value: boolean }>();
 
     const setValid = (payload: boolean) => {
         isValid.set(payload);
     };
-    const setValue = (payload: { key: string; value: any; validate?: boolean }) => {
+
+    values.on(setValue, (state, payload) => {
         const currentValue = helpers.getDeepValue<any>(values.get(), payload.key);
         const currentTouched = helpers.getDeepValue<boolean>(touched.get(), payload.key);
 
@@ -58,7 +63,7 @@ function createForm<State extends object>(props: FormParams<State>): FormConfig<
         }
 
         if (currentValue === payload.value) {
-            return;
+            return state;
         }
 
         if (payload.validate) {
@@ -71,31 +76,32 @@ function createForm<State extends object>(props: FormParams<State>): FormConfig<
             setValid(nextIsValid);
         }
 
-        values.set({...helpers.setDeepValue(values.get(), payload.key, payload.value)});
-
-        if (props.onChange) {
-            props.onChange(values.get());
-        }
-    };
-    const setError = (payload: { key: string; value: string | undefined }) => {
+        return {...helpers.setDeepValue(values.get(), payload.key, payload.value)};
+    });
+    errors.on(setError, (state, payload) => {
         const currentError = helpers.getDeepValue<string | undefined>(errors.get(), payload.key);
 
         if (currentError === payload.value) {
-            return;
+            return state;
         }
 
-        errors.set({...helpers.setDeepValue(errors.get(), payload.key, payload.value || '')});
-    };
-    const setTouched = (payload: { key: string; value: boolean }) => {
+        return {...helpers.setDeepValue(errors.get(), payload.key, payload.value || '')};
+    });
+    touched.on(setTouched, ((state, payload) => {
         const currentTouched = helpers.getDeepValue<boolean>(touched.get(), payload.key);
 
         if (currentTouched === payload.value) {
-            return;
+            return state;
         }
 
-        return touched.set({...helpers.setDeepValue(touched.get(), payload.key, payload.value)});
-    };
-    const reset = () => {
+        return {...helpers.setDeepValue(touched.get(), payload.key, payload.value)};
+    }));
+
+    const validate = createEvent();
+    const reset = createEvent();
+    const submit = createEvent();
+
+    reset.watch(() => {
         values.reset();
         errors.reset();
         touched.reset();
@@ -104,7 +110,31 @@ function createForm<State extends object>(props: FormParams<State>): FormConfig<
         if (props.validateOnCreate) {
             validate();
         }
-    };
+    });
+    submit.watch(() => {
+        validate();
+
+        if (props.onSubmit && isValid.get()) {
+            props.onSubmit(values.get());
+        }
+    });
+    validate.watch(() => {
+        if (props.validationSchema) {
+            try {
+                props.validationSchema.validateSync(values.get(), {
+                    recursive: true,
+                    abortEarly: false,
+                });
+            } catch (e) {
+                for (const err of e.inner) {
+                    const key = err.path.replace('[', '.').replace(']', '');
+
+                    setError({key, value: err.message});
+                    setTouched({key, value: true})
+                }
+            }
+        }
+    });
 
     const validateAt = (key: string) => {
         if (props.validationSchema) {
@@ -123,31 +153,6 @@ function createForm<State extends object>(props: FormParams<State>): FormConfig<
                     setError({key: key1, value: e.message});
                 }
             }
-        }
-    };
-    const validate = () => {
-        if (props.validationSchema) {
-            try {
-                props.validationSchema.validateSync(values.get(), {
-                    recursive: true,
-                    abortEarly: false,
-                });
-            } catch (e) {
-                for (const err of e.inner) {
-                    const key = err.path.replace('[', '.').replace(']', '');
-
-                    setError({key, value: err.message});
-                    setTouched({key, value: true})
-                }
-            }
-        }
-    };
-
-    const submit = () => {
-        validate();
-
-        if (props.onSubmit && isValid.get()) {
-            props.onSubmit(values.get());
         }
     };
 

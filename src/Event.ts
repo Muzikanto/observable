@@ -1,10 +1,10 @@
 import {Listener} from "./Observable";
 
-export type IEvent<P> = ((payload: P) => void) & {
-    watch: (watcher: Listener<P>) => void;
+export type IEvent<P = void> = ((payload: P) => void) & {
+    watch: (watcher: Listener<P>) => () => void;
 };
 
-class Event<P> {
+class Event<P = void> {
     protected listeners: Array<Listener<P>> = [];
 
     public call: IEvent<P>;

@@ -1,6 +1,6 @@
 import Event, {IEvent} from './Event';
 
-function createEvent<P>(): IEvent<P> {
+function createEvent<P = void>(): IEvent<P> {
     return new Event<P>().call;
 }
 
