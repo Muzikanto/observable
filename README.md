@@ -13,6 +13,7 @@
   - [Create form with validation](#create-form-with-validation)
   - [Create form Fields](#create-form-fields)
   - [Use Form and Fields](#use-form-and-fields)
+  - [Portal](#portal)
 - [API](#api)
   - [createStore](#createstore)
   - [createEvent](#createevent)
@@ -236,6 +237,27 @@ yarn add @muzikanto/observable
               />
             </Form>
         );
+    }
+```
+
+### Portal
+```typescript jsx
+    const store = createStore<React.ReactNode>(undefined);
+
+    // portaled from 
+    function Component() {
+      return (
+        <Portal store={store} disablePortal={disablePortal}>
+           <div>portaled component</div>
+        </Portal>
+      );
+    }
+    
+    // portaled to 
+    function Component2() {
+      const children = useStore(store);
+      
+      return children;
     }
 ```
 

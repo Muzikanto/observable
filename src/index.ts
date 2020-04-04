@@ -15,3 +15,4 @@ export * from './useSelector';
 export * from './useStore';
 export * from './forward';
 export * from './createApi';
+export * from './Portal';
