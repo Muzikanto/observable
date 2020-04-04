@@ -24,7 +24,7 @@
     "clean": "rm -rf lib",
     "build": "tsc -b",
     "linter": "tslint -c tslint.json 'src/**/*.ts' --fix",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && npm run test",
     "test": "jest"
   },
   "peerDependencies": {
