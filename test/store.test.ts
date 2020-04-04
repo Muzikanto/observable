@@ -34,7 +34,11 @@ describe('store', () => {
         store.set(2);
         store.set(3);
 
-        expect(v).toBe(8)
+        expect(v).toBe(2);
+
+        setTimeout(() => {
+            expect(v).toBe(8);
+        }, 0);
     });
 
     it('store subscribe', () => {
@@ -49,5 +53,56 @@ describe('store', () => {
         store.set(3);
 
         expect(v).toBe(6)
+    });
+
+    it('reset', () => {
+       store.set(3);
+
+       store.reset();
+
+       expect(store.get()).toBe(1);
+    });
+
+    it('unsubscribe', () => {
+        let v = 2;
+
+        const unSubscribe = store.subscribe((state) => {
+            v = state + 1;
+        }, state => {
+            return state + 2;
+        });
+
+        unSubscribe();
+
+        store.set(3);
+
+        expect(v).toBe(2)
+    });
+
+    it('unWatch', () => {
+        let v = 2;
+
+        const unWatch = store.watch(() => {
+            v = v * 2;
+        });
+
+        unWatch();
+
+        store.set(2);
+        store.set(3);
+
+        expect(v).toBe(2)
+    });
+
+    it('unwatch change with event', () => {
+        const event = createEvent<number>();
+
+        const unWatch = store.on(event, (state, payload) => state + payload);
+
+        unWatch();
+
+        event(2);
+
+        expect(store.get()).toBe(1);
     });
 });

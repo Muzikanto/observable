@@ -23,7 +23,6 @@ class Observable<T> {
         if (this.value !== val) {
             this.value = val;
             this.listeners.forEach(l => l.event(l.selector ? l.selector(val) : val));
-            this.watchers.forEach(l => l(val));
 
             setTimeout(() => {
                 this.watchers.forEach(l => l(val));

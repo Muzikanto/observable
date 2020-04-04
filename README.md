@@ -59,24 +59,28 @@ yarn add @muzikanto/observable
     // create 
     const store = createStore<number>(1);
     // multiple watch changes 
-    store.watch(console.log);
+    const unWatchFunc = store.watch(console.log);
 ```
 
 ### example createEvent
 
 ```typescript
-    // create 
-    const event = createEvent<number>();
-    // call
-    event(1);
-    // subscribe in store
-    const unwatchFunc = store.on(event, (state: StoreState, payload: number) => {
-       // todo
-       return payload; 
-    });
-    // Unwatch event
-    unwatchFunc();
+  import createStore from "@muzikanto/observable/lib/createStore";
+  import createEvent from "@muzikanto/observable/lib/createEvent";
+
+  const store = createStore<number>(1);
+  const append = createEvent<number>();
+  const change = createEvent<number>();
+
+  store.on(append, (state, payload) => state + payload);
+  store.on(append, (state, payload) => payload);
+  
+  append(2); // 3
+  change(-2); // -2
+  store.reset(); // 1
 ```
+
+[Run in CodeBox](https://codesandbox.io/s/romantic-thunder-446dc)
 
 ### example createEffect
 
@@ -165,26 +169,6 @@ yarn add @muzikanto/observable
       return children;
     }
 ```
-
-### Change with Event
-
-```typescript jsx
-  import createStore from "@muzikanto/observable/lib/createStore";
-  import createEvent from "@muzikanto/observable/lib/createEvent";
-
-  const store = createStore<number>(1);
-  const append = createEvent<number>();
-  const change = createEvent<number>();
-
-  store.on(append, (state, payload) => state + payload);
-  store.on(append, (state, payload) => payload);
-  
-  append(2); // 3
-  change(-2); // -2
-  store.reset(); // 1
-```
-
-[Run in CodeBox](https://codesandbox.io/s/romantic-thunder-446dc)
 
 ### Subscribe two stores
 

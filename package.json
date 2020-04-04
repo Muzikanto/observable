@@ -25,7 +25,8 @@
     "build": "tsc -b",
     "linter": "tslint -c tslint.json 'src/**/*.ts' --fix",
     "prepublish": "npm run build && npm run test",
-    "test": "jest"
+    "test": "jest",
+    "test:info": "jest --coverage"
   },
   "peerDependencies": {
     "react": "16.12.0",

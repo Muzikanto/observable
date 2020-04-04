@@ -7,3 +7,4 @@ tsconfig.json
 tslint.json
 test
 jest.config.js
+coverage
