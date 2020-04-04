@@ -1,5 +1,5 @@
 import createStore from "./createStore";
-import Observable from "./Observable";
+import {Store} from "./Observable";
 import createEvent from "./createEvent";
 import {IEvent} from "./Event";
 
@@ -9,7 +9,7 @@ type ApiEvents<S, A> = {
 
 export type Api<S, A extends { [key: string]: (state: S, payload: any) => S }> =
     ApiEvents<S, A>
-    & { store: Observable<S>; };
+    & { store: Store<S>; };
 
 function createApi<S, A extends { [key: string]: (state: S, payload: any) => S }>(state: S, api: A): Api<S, A> {
     const store = createStore(state);

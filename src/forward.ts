@@ -1,6 +1,6 @@
 import {IEvent} from "./Event";
 
-function forward<P>(from: IEvent<P>, to: IEvent<P>) {
+function forward<P>(from: IEvent<P>, to: IEvent<P>): () => void {
     return from.watch(to);
 }
 

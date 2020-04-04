@@ -8,12 +8,18 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Examples](#examples)
+  - [createStore](#example-createstore)
+  - [createEvent](#example-createevent)
+  - [createEffect](#example-createeffect)
+  - [createApi](#example-createapi)
+  - [combine](#example-combine)
+  - [forward](#example-forward)
+  - [Portal](#example-portal)
+  - [createForm](#example-createform)
   - [change with Event](#change-with-event)
   - [subscribe two stores (React)](#subscribe-two-stores)
-  - [Create form with validation](#create-form-with-validation)
   - [Create form Fields](#create-form-fields)
   - [Use Form and Fields](#use-form-and-fields)
-  - [Portal](#portal)
 - [API](#api)
   - [createStore](#createstore)
   - [createEvent](#createevent)
@@ -46,6 +52,120 @@ yarn add @muzikanto/observable
 ```
 
 ## Examples
+
+### example createStore
+
+```typescript
+    // create 
+    const store = createStore<number>(1);
+    // multiple watch changes 
+    store.watch(console.log);
+```
+
+### example createEvent
+
+```typescript
+    // create 
+    const event = createEvent<number>();
+    // call
+    event(1);
+    // subscribe in store
+    const unwatchFunc = store.on(event, (state: StoreState, payload: number) => {
+       // todo
+       return payload; 
+    });
+    // Unwatch event
+    unwatchFunc();
+```
+
+### example createEffect
+
+```typescript
+    type Request = {param: number};
+
+    // create 
+    const effect = createEffect<Request, Response, Error>(async (params: Request) => {
+        try {
+            const response = await axios.get('https://example.com', {params});
+                    
+            return response;
+        } catch (e) {
+          throw e;
+        }
+    });
+    
+    // subscribe in store
+    storeDone.on(effect.done, (_, payload) => payload);
+    storeFail.on(effect.fail, (_, payload) => payload);
+    storeLoading.on(effect.loading, (_, payload) => payload);
+
+    // call
+    event({param: 1})
+        .then(response => console.log(response))
+        .catch(err => console.log(err));
+```
+
+### example createApi
+```typescript jsx
+    const api = createApi(1, {
+        increment: (state, payload: number) => state + payload,
+        change: (state, payload: string) => payload.length,
+    });
+    
+    api.increment(2);
+    api.change('test');
+```
+
+### example combine 
+
+```typescript jsx
+     const one = createStore('Hello ');
+     const two = createStore('World');
+ 
+     const combinedStringStore = combine(
+        {one, two},
+        ({one, two}) => {
+             return one + ' ' + two;
+         },
+     );
+     
+     combinedStringStore.get(); // Hello World
+```
+
+### example forward
+```typescript jsx
+    const one = createEvent<number>();
+    const two = createEvent<number>();
+    
+    two.watch(console.log);
+
+    forward(one, two);
+    
+    one(3); // log: 3
+````
+
+### example Portal
+
+```typescript jsx
+    const store = createStore<React.ReactNode>(undefined);
+
+    // portaled from 
+    function Component() {
+      return (
+        <Portal store={store} disablePortal={disablePortal}>
+           <div>portaled component</div>
+        </Portal>
+      );
+    }
+    
+    // portaled to 
+    function Component2() {
+      const children = useStore(store);
+      
+      return children;
+    }
+```
+
 ### Change with Event
 
 ```typescript jsx
@@ -66,9 +186,8 @@ yarn add @muzikanto/observable
 
 [Run in CodeBox](https://codesandbox.io/s/romantic-thunder-446dc)
 
----
-
 ### Subscribe two stores
+
 ```typescript jsx
   import useSelector from "@muzikanto/observable/lib/useSelector";
   import createStore from "@muzikanto/observable/lib/createStore";
@@ -128,7 +247,7 @@ yarn add @muzikanto/observable
   */
 ```
 
-### Create form with validation
+### example createForm
 
 ```typescript jsx
     import createForm from "@muzikanto/observable/lib/createForm";
@@ -240,158 +359,108 @@ yarn add @muzikanto/observable
     }
 ```
 
-### Portal
-```typescript jsx
-    const store = createStore<React.ReactNode>(undefined);
-
-    // portaled from 
-    function Component() {
-      return (
-        <Portal store={store} disablePortal={disablePortal}>
-           <div>portaled component</div>
-        </Portal>
-      );
-    }
-    
-    // portaled to 
-    function Component2() {
-      const children = useStore(store);
-      
-      return children;
-    }
-```
-
 ## Api
 
 ### createStore
 
 ```typescript
-    // create 
-    const store = createStore<number>(1);
-    // multiple watch changes 
-    store.watch(console.log);
+    function createStore<T>(initialState: T): Store<T>
+    
+    interface Store<T> {
+      get: () => T;
+      set: (v: T) => void;
+      subscribe: (listener: Listener<any>, selector?: (state: T) => any) =>() => void;
+      reset: () => void;
+      on: <P>(event: IEvent<P>, handler: (state: T, payload: P) => T) => () => void;
+      watch: (handler: (state: T) => void): () => void;
+    }
 ```
 
 ### createEvent
 
 ```typescript
-    // create 
-    const event = createEvent<number>();
-    // call
-    event(1);
-    // subscribe in store
-    const unwatchFunc = store.on(event, (state: StoreState, payload: number) => {
-       // todo
-       return payload; 
-    });
-    // Unwatch event
-    unwatchFunc();
+    function createEvent<P = void>(): IEvent<P>
+    
+    type IEvent<P = void> = ((payload: P) => void) & {
+        watch: (watcher: Listener<P>) => () => void;
+    };
 ```
 
 ### createEffect
 
 ```typescript
-    type Request = {param: number};
-
-    // create 
-    const effect = createEffect<Request, Response, Error>(async (params: Request) => {
-        try {
-            const response = await axios.get('https://example.com', {params});
-                    
-            return response;
-        } catch (e) {
-          throw e;
-        }
-    });
+    function createEffect<Req, Res, Err = Error>(
+        handler: (params: Req) => Promise<Res>,
+    ): IEffect<Req, Res, Err>
     
-    // subscribe in store
-    storeDone.on(effect.done, (_, payload) => payload);
-    storeFail.on(effect.fail, (_, payload) => payload);
-    storeLoading.on(effect.loading, (_, payload) => payload);
-
-    // call
-    event({param: 1})
-        .then(response => console.log(response))
-        .catch(err => console.log(err));
+    type IEffect<Req, Res, Err = Error> = ((request: Req) => Promise<Res>)
+     & { done: IEvent<Res>; fail: IEvent<Err>; loading: IEvent<boolean> };
 ```
 
 ### createApi
 ```typescript jsx
-    const api = createApi(1, {
-        increment: (state, payload: number) => state + payload,
-        change: (state, payload: string) => payload.length,
-    });
+    function createApi<S, A extends { [key: string]: (state: S, payload: any) => S }>(
+        state: S,
+        api: A,
+    ): Api<S, A>
     
-    api.increment(2);
-    api.change('test');
-
-    /*
-        {
-            store: Store<number>,
-            increment: IEvent<number>,
-            change: IEvent<string>,
-        }
-     */
+    type Api<S, A extends { [key: string]: (state: S, payload: any) => S }> =
+        ApiEvents<S, A>
+        & { store: Store<S>; };
+    
+    type ApiEvents<S, A> = {
+        [K in keyof A]: A[K] extends (store: S, e: infer E) => S ? IEvent<E> : any
+    }
 ```
 
 ### combine
 ```typescript jsx
-     const one = createStore('Hello ');
-     const two = createStore('World');
- 
-     const combinedStore = combine({
-         map: {one, two},
-         func: ({one, two}) => {
-             return one + ' ' + two;
-         },
-     });
-     
-     combinedStore.get(); // Hello World
+     function combine<S, Map extends { [key: string]: any }>(
+         map: { [k in keyof Map]: Store<Map[k]> },
+         func: (map: Map) => S,
+     ): Store<S>
 ```
 
 ### forward
 ```typescript jsx
-    const one = createEvent<number>();
-    const two = createEvent<number>();
-    
-    two.watch(console.log);
-
-    forward(one, two);
-    
-    one(3); // log: 3
+    function forward<P>(from: IEvent<P>, to: IEvent<P>): () => void 
 ````
 
 ### createForm
 with yup validation
 
 ```typescript jsx
-    import * as Yup from 'yup';
-
-    interface State {
-        text: string;
-        field: string;
-        deep: {
-            one: string;
-            two: string;
-        };
-        arr: string[];
+    function createForm<State extends object>(
+        params: FormParams<State>,
+    ): FormConfig<State>
+    
+    interface FormParams<State extends object> {
+        initialState: State;
+        initialErrors?: FormErrors<State>;
+        initialTouched?: FormTouched<State>;
+        validationSchema?: Schema<Partial<State>>; // Schema => yup.Schema
+    
+        validateOnCreate?: boolean;
+    
+        onSubmit?: (state: State) => void;
     }
     
-    const validationSchema = Yup.object().shape({
-        text: Yup.string().required().max(5),
-        field: Yup.string().required().max(3),
-    });
+    interface FormConfig<State extends object> {
+        values: Store<State>;
+        errors: Store<FormErrors<State>>;
+        touched: Store<FormTouched<State>>;
+        isValid: Store<boolean>;
     
-    const form = createForm<State>({
-        validateOnCreate: false,
-        initialState: {
-            text: '123',
-            field: '',
-            deep: {one: '1', two: ''},
-            arr: ['1', '2', '3'],
-        },
-        validationSchema,
-    });
+        setValue: IEvent<{ key: string; value: any; validate?: boolean; }>;
+        setError: IEvent<{ key: string; value: string | undefined }>;
+        setTouched: IEvent<{ key: string; value: boolean }>;
+    
+        submit: IEvent<void>;
+        reset: IEvent<void>;
+        validate: IEvent<void>;
+        validateAt: (key: string) => void;
+    }
+  
 ```
 
 ## License
