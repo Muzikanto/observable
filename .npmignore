@@ -8,3 +8,4 @@ tslint.json
 test
 jest.config.js
 coverage
+.prettierrc.json
