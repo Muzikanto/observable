@@ -41,7 +41,7 @@
 - create effect and subscribe events (done, fail, loading)
 - create form with yup validation 
 - create your fields (partial rendering)
-- override Event, Effect, Observable if you need
+- override Event, Effect, Store if you need
 
 ## Installation
 
@@ -444,7 +444,21 @@ with yup validation
         validate: IEvent<void>;
         validateAt: (key: string) => void;
     }
-  
+```
+
+### useStore
+
+```typescript jsx
+    function useStore<T>(observable: Store<T>): T
+```
+
+### useSelector
+
+```typescript jsx
+    function useSelector<T, V>(
+        observable: Observable<T>,
+        selector: (state: T) => V,
+    ): V
 ```
 
 ## License

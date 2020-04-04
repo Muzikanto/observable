@@ -1,7 +1,7 @@
 import React from 'react';
-import Observable from './Observable';
+import {Store} from './Observable';
 
-function useStore<T>(observable: Observable<T>): T {
+function useStore<T>(observable: Store<T>): T {
     const [val, setVal] = React.useState(observable.get());
 
     React.useEffect(() => {
