@@ -25,7 +25,7 @@ function combine<Map extends { [key: string]: any }, S = Map>(
       });
    }
 
-   return store as typeof func extends undefined ? Store<Map> : Store<S>;
+   return store as Store<S>;
 }
 
 export default combine;

@@ -28,12 +28,17 @@
    -  useSelector
    -  [combine](#combine)
    -  [forward](#forward)
-   -  [createForm](#createform)
-   -  useField
-   -  useFieldArray
-   -  Form
-   -  ErrorMessage
    -  Portal
+   -  GlobalStore
+      -  createGlobalStore
+      -  GlobalStoreCtx
+      -  useGlobal
+   -  Form
+      -  [createForm](#createform)
+      -  Form
+      -  useField
+      -  useFieldArray
+      -  ErrorMessage
 -  [License](#license)
 
 <!-- /TOC -->
