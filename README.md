@@ -133,6 +133,10 @@ api.change('test');
 const one = createStore('Hello ');
 const two = createStore('World');
 
+const combinedObjStore = combine({ one, two });
+
+combinedObjStore.get(); // { one: 'Hello ', two: 'World' }
+
 const combinedStringStore = combine({ one, two }, ({ one, two }) => {
    return one + ' ' + two;
 });
@@ -399,9 +403,9 @@ type ApiEvents<S, A> = {
 ### combine
 
 ```typescript jsx
-function combine<S, Map extends { [key: string]: any }>(
+function combine<Map extends { [key: string]: any }, S = Map>(
    map: { [k in keyof Map]: Store<Map[k]> },
-   func: (map: Map) => S,
+   func?: (map: Map) => S,
 ): Store<S>;
 ```
 
