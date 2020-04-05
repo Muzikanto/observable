@@ -1,7 +1,10 @@
 ## Observable and Observable-form
 
+[![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable)
+[![downloads](https://img.shields.io/npm/dm/@muzikanto/observable.svg)](https://www.npmjs.com/package/@muzikanto/observable)
 [![dependencies Status](https://david-dm.org/muzikanto/observable/status.svg)](https://david-dm.org/muzikanto/observable)
 [![size](https://img.shields.io/bundlephobia/minzip/@muzikanto/observable)](https://bundlephobia.com/result?p=@muzikanto/observable)
+![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 
 <!-- TOC -->
 
