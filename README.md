@@ -417,7 +417,10 @@ function combine<Map extends { [key: string]: any }, S = Map>(
 ### forward
 
 ```typescript jsx
-function forward<P>(from: IEvent<P>, to: IEvent<P>): () => void;
+function forward<P>(
+   from: IEvent<P>,
+   to: IEvent<P> | Array<IEvent<P>>,
+): (() => void) | (Array<() => void>);
 ```
 
 ### createForm
