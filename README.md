@@ -32,6 +32,7 @@
    -  [combine](#combine)
    -  [forward](#forward)
    -  Portal
+   -  ErrorBoundary
    -  GlobalStore
       -  createGlobalStore
       -  GlobalStoreCtx
