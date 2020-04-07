@@ -71,7 +71,7 @@ yarn add @muzikanto/observable
 
 ## Examples
 
-[More examples](github.com/Muzikanto/observable/tree/master/examples)
+[More examples](http://github.com/Muzikanto/observable/tree/master/examples)
 
 ### example createStore
 
