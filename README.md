@@ -29,6 +29,8 @@
    -  [createApi](#createapi)
    -  useStore
    -  useSelector
+   -  StoreConsumer
+   -  connect
    -  [combine](#combine)
    -  [forward](#forward)
    -  Portal
@@ -88,7 +90,7 @@ const append = createEvent<number>();
 const change = createEvent<number>();
 
 store.on(append, (state, payload) => state + payload);
-store.on(append, (state, payload) => payload);
+store.on(change, (state, payload) => payload);
 
 append(2); // 3
 change(-2); // -2
