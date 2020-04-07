@@ -9,3 +9,4 @@ test
 jest.config.js
 coverage
 .prettierrc.json
+examples

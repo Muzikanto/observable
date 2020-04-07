@@ -59,6 +59,7 @@
 -  create form with yup validation
 -  create your fields (partial rendering)
 -  override Event, Effect, Store if you need
+-  and more..
 
 ## Installation
 
@@ -70,13 +71,19 @@ yarn add @muzikanto/observable
 
 ## Examples
 
+[More examples](github.com/Muzikanto/observable/tree/master/examples)
+
 ### example createStore
 
-```typescript
-// create
-const store = createStore<number>(1);
-// multiple watch changes
-const unWatchFunc = store.watch(console.log);
+```typescript jsx
+const store = createStore<number>({ value: 1 });
+
+function Component() {
+   const state = useStore(store); // {value: 1};
+   // const value = useStore(store, s => s.value);
+
+   return <span>{state.value}</span>;
+}
 ```
 
 ### example createEvent
@@ -126,18 +133,6 @@ event({ param: 1 })
    .catch(err => console.log(err));
 ```
 
-### example createApi
-
-```typescript jsx
-const api = createApi(1, {
-   increment: (state, payload: number) => state + payload,
-   change: (state, payload: string) => payload.length,
-});
-
-api.increment(2);
-api.change('test');
-```
-
 ### example combine
 
 ```typescript jsx
@@ -153,202 +148,6 @@ const combinedStringStore = combine({ one, two }, ({ one, two }) => {
 });
 
 combinedStringStore.get(); // Hello World
-```
-
-### example forward
-
-```typescript jsx
-const one = createEvent<number>();
-const two = createEvent<number>();
-
-two.watch(console.log);
-
-forward(one, two);
-
-one(3); // log: 3
-```
-
-### example Portal
-
-```typescript jsx
-const store = createStore<React.ReactNode>(undefined);
-
-// portaled from
-function Component() {
-   return (
-      <Portal store={store} disablePortal={disablePortal}>
-         <div>portaled component</div>
-      </Portal>
-   );
-}
-
-// portaled to
-function Component2() {
-   const children = useStore(store);
-
-   return children;
-}
-```
-
-### Subscribe two stores
-
-```typescript jsx
-import useSelector from '@muzikanto/observable/lib/useSelector';
-import createStore from '@muzikanto/observable/lib/createStore';
-import createEvent from '@muzikanto/observable/lib/createEvent';
-
-const store = createStore({ one: 1, two: 2 });
-const appendOne = createEvent<number>();
-const appendTwo = createEvent<number>();
-
-const unWatchAppendOne = store.on(appendOne, (state, payload) => {
-   return { ...state, one: state.one + payload };
-});
-const unWatchAppendTwo = store.on(appendOne, (state, payload) => {
-   return { ...state, two: state.two + payload };
-});
-const unWatchLog = store.watch(console.log);
-
-const onClickUnwatch = () => {
-   unWatchAppendOne();
-   unWatchAppendTwo();
-   unWatchLog();
-};
-
-function OnePreview() {
-   const state: number = useSelector(store, state => state.one);
-
-   return <div>{state}</div>;
-}
-
-function TwoPreview() {
-   const state: number = useSelector(store, state => state.two);
-
-   return <div>{state}</div>;
-}
-
-function Main() {
-   return (
-      <>
-         <OnePreview />
-         <TwoPreview />
-         <button onClick={() => appendOne(1)}>append-one</button>
-         <button onClick={() => appendTwo(2)}>append-two</button>
-         <button onClick={onClickUnwatch}>unWatch</button>
-      </>
-   );
-}
-
-/*
-   click: append-one
-        render only: OnePreview
-   click: append-two
-        render only: TwoPreview
-*/
-```
-
-### example createForm
-
-```typescript jsx
-import createForm from '@muzikanto/observable/lib/createForm';
-import * as Yup from 'yup';
-
-interface State {
-   text: string;
-   field: string;
-   deep: {
-      one: string;
-      two: string;
-   };
-   arr: string[];
-}
-
-const validationSchema = Yup.object().shape({
-   text: Yup.string()
-      .required()
-      .max(5),
-   field: Yup.string()
-      .required()
-      .max(3),
-});
-
-const form = createForm<State>({
-   validateOnCreate: false,
-   initialState: {
-      text: '123',
-      field: '',
-      deep: { one: '1', two: '' },
-      arr: ['1', '2', '3'],
-   },
-   validationSchema,
-});
-```
-
-### Create form Fields
-
-```typescript jsx
-// useField extends useSelector
-import useField from '@muzikanto/observable/lib/useField';
-// useFieldArray extends useField
-import useFieldArray from '@muzikanto/observable/lib/useFieldArray';
-
-function Field(props: { name: string }) {
-   const { value, error, touched, setFieldTouched, setFieldValue } = useField<string>({
-      name: props.name,
-   });
-
-   return (
-      <TextField
-         value={value}
-         onChange={e => setFieldValue(e.target.value)}
-         onBlur={() => setFieldTouched(true)}
-         helperText={touched && error && error}
-         error={Boolean(touched && error)}
-      />
-   );
-}
-
-function FieldArray(props: { name: string }) {
-   const { value, push, pop, swap, clear } = useFieldArray<string>({ name: props.name });
-
-   return (
-      <>
-         {value.map((el, i) => {
-            return <span key={i + 'test'}>{el}</span>;
-         })}
-         <Button onClick={() => push((value.length + 1).toString())}>push</Button>
-         <Button onClick={() => pop()}>pop</Button>
-      </>
-   );
-}
-```
-
-### Use Form and Fields
-
-```typescript jsx
-import Form from '@muzikanto/observable/lib/Form';
-
-function Main() {
-   return (
-      <Form form={form}>
-         <FormTextField name='text' />
-         <FormTextField name='field' />
-         <FormTextField name='deep.one' />
-
-         <FormTextFieldArray name='arr' />
-         <Button onClick={() => form.reset()}>RESET</Button>
-         <Button onClick={() => form.validate()}>VALIDATE</Button>
-         <Submit
-            component={({ onClick, disabled }) => (
-               <button onClick={onClick} disabled={disabled}>
-                  Submit
-               </button>
-            )}
-         />
-         <ErrorMessage name='field' component={props => <span {...props} />} />
-      </Form>
-   );
-}
 ```
 
 ## Api
