@@ -86,9 +86,6 @@ function Component() {
 ### example createEvent
 
 ```typescript
-import createStore from '@muzikanto/observable/lib/createStore';
-import createEvent from '@muzikanto/observable/lib/createEvent';
-
 const store = createStore<number>(1);
 const append = createEvent<number>();
 const change = createEvent<number>();
