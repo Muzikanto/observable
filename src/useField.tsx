@@ -20,7 +20,7 @@ function useField<Value>(props: FieldProps<Value>) {
    const error = useStore(ctx.errors, state => {
       return helpers.getDeepValue<string | undefined>(state, props.name);
    });
-   const touched = useSelector(ctx.touched, state => {
+   const touched = useStore(ctx.touched, state => {
       return helpers.getDeepValue<boolean>(state, props.name);
    });
 
