@@ -25,7 +25,6 @@
    -  [createEffect](#createeffect)
    -  [createApi](#createapi)
    -  useStore
-   -  useSelector
    -  StoreConsumer
    -  connect
    -  [combine](#combine)
@@ -260,13 +259,7 @@ interface FormConfig<State extends object> {
 ### useStore
 
 ```typescript jsx
-function useStore<T>(observable: Store<T>): T;
-```
-
-### useSelector
-
-```typescript jsx
-function useSelector<T, V>(observable: Observable<T>, selector: (state: T) => V): V;
+function useStore<T, V>(observable: Store<T>, selector: (state: T) => V): V;
 ```
 
 ## License
