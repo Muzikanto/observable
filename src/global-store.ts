@@ -5,7 +5,7 @@ export const __OBSERVABLE_GLOBAL_STORE__ = '__OBSERVABLE_GLOBAL_STORE__';
 const isServer = typeof window === 'undefined';
 
 function createGlobalStore<S = {}>(
-   func: (initialState?: Partial<S>) => Store<S>,
+   func: (initialState: Partial<S>) => Store<S>,
    initialState: Partial<S> = {},
 ): Store<S> {
    if (isServer) {

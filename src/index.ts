@@ -17,4 +17,6 @@ export * from './createApi';
 export * from './Portal';
 export * from './global-store-ctx';
 export * from './global-store';
+export * from './GlobalStoreProvider';
 export * from './useGlobal';
+export * from './ErrorBoundary';
