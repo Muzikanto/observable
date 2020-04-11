@@ -1,108 +1,126 @@
-import createStore from "../src/createStore";
-import createEvent from "../src/createEvent";
+import createStore from '../src/createStore';
+import createEvent from '../src/createEvent';
 
 describe('store', () => {
-    let store = createStore<number>(1);
+   let store = createStore<number>(1);
 
-    beforeEach(() => {
-        store = createStore(1);
-    });
+   beforeEach(() => {
+      store = createStore(1);
+   });
 
-    it('change', () => {
-        store.set(2);
+   it('change', () => {
+      store.set(2);
 
-        expect(store.get()).toBe(2);
-    });
+      expect(store.get()).toBe(2);
+   });
 
-    it('change with event', () => {
-        const event = createEvent<number>();
+   it('change with event', () => {
+      const event = createEvent<number>();
 
-        store.on(event, (state, payload) => state + payload);
+      store.on(event, (state, payload) => state + payload);
 
-        event(2);
+      event(2);
 
-        expect(store.get()).toBe(3);
-    });
+      expect(store.get()).toBe(3);
+   });
 
-    it('store watch', () => {
-        let v = 2;
+   it('store watch', () => {
+      let v = 2;
 
-        store.watch(() => {
-            v = v * 2;
-        });
+      store.watch(() => {
+         v = v * 2;
+      });
 
-        store.set(2);
-        store.set(3);
+      store.set(2);
+      store.set(3);
 
-        expect(v).toBe(2);
+      expect(v).toBe(2);
 
-        setTimeout(() => {
-            expect(v).toBe(8);
-        }, 0);
-    });
+      setTimeout(() => {
+         expect(v).toBe(8);
+      }, 0);
+   });
 
-    it('store subscribe', () => {
-        let v = 2;
+   it('store subscribe', () => {
+      let v = 2;
 
-        store.subscribe((state) => {
+      store.subscribe(
+         state => {
             v = state + 1;
-        }, state => {
+         },
+         state => {
             return state + 2;
-        });
+         },
+      );
 
-        store.set(3);
+      store.set(3);
 
-        expect(v).toBe(6)
-    });
+      expect(v).toBe(6);
+   });
 
-    it('reset', () => {
-       store.set(3);
+   it('reset', () => {
+      store.set(3);
 
-       store.reset();
+      store.reset();
 
-       expect(store.get()).toBe(1);
-    });
+      expect(store.get()).toBe(1);
+   });
 
-    it('unsubscribe', () => {
-        let v = 2;
+   it('unsubscribe', () => {
+      let v = 2;
 
-        const unSubscribe = store.subscribe((state) => {
+      const unSubscribe = store.subscribe(
+         state => {
             v = state + 1;
-        }, state => {
+         },
+         state => {
             return state + 2;
-        });
+         },
+      );
 
-        unSubscribe();
+      unSubscribe();
 
-        store.set(3);
+      store.set(3);
 
-        expect(v).toBe(2)
-    });
+      expect(v).toBe(2);
+   });
 
-    it('unWatch', () => {
-        let v = 2;
+   it('unWatch', () => {
+      let v = 2;
 
-        const unWatch = store.watch(() => {
-            v = v * 2;
-        });
+      const unWatch = store.watch(() => {
+         v = v * 2;
+      });
 
-        unWatch();
+      unWatch();
 
-        store.set(2);
-        store.set(3);
+      store.set(2);
+      store.set(3);
 
-        expect(v).toBe(2)
-    });
+      expect(v).toBe(2);
+   });
 
-    it('unwatch change with event', () => {
-        const event = createEvent<number>();
+   it('unwatch change with event', () => {
+      const event = createEvent<number>();
 
-        const unWatch = store.on(event, (state, payload) => state + payload);
+      const unWatch = store.on(event, (state, payload) => state + payload);
 
-        unWatch();
+      unWatch();
 
-        event(2);
+      event(2);
 
-        expect(store.get()).toBe(1);
-    });
+      expect(store.get()).toBe(1);
+   });
+
+   it('check watch prev', () => {
+      let v = 4;
+
+      store.watch((state, prev) => {
+         v = state + prev;
+      });
+
+      store.set(3);
+
+      expect(v).toBe(4);
+   });
 });

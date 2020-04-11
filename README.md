@@ -157,7 +157,7 @@ interface Store<T> {
   subscribe: (listener: Listener<any>, selector?: (state: T) => any) =>() => void;
   reset: () => void;
   on: <P>(event: IEvent<P>, handler: (state: T, payload: P) => T) => () => void;
-  watch: (handler: (state: T) => void): () => void;
+  watch: (handler: (state: T, prev: T) => void): () => void;
 }
 ```
 
@@ -260,7 +260,7 @@ interface FormConfig<State extends object> {
 ### useStore
 
 ```typescript jsx
-function useStore<T, V>(observable: Store<T>, selector: (state: T) => V): V;
+function useStore<T, V>(observable: Store<T>, selector?: (state: T) => V): V;
 ```
 
 ## License

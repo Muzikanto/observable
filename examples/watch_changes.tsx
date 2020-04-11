@@ -9,8 +9,12 @@ const change = createEvent<number>();
 store.on(change, (_, payload) => payload);
 
 // watch store changes
-const unWatchStore1 = store.watch(state => console.log('watch1: ' + state));
-const unWatchStore2 = store.watch(state => console.log('watch2: ' + state));
+const unWatchStore1 = store.watch((state, prev) =>
+   console.log('currentState1: ' + state, 'prevState1: ' + prev),
+);
+const unWatchStore2 = store.watch((state, prev) =>
+   console.log('currentState2: ' + state, 'prevState2: ' + prev),
+);
 
 // watch event payloads
 const unWatchEvent1 = change.watch(payload => console.log('payload1: ' + payload));
