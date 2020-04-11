@@ -20,3 +20,6 @@ export * from './global-store';
 export * from './GlobalStoreProvider';
 export * from './useGlobal';
 export * from './ErrorBoundary';
+export * from './isEvent';
+export * from './isStore';
+export * from './StoreConsumer';

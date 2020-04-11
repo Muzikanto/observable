@@ -28,6 +28,8 @@
    -  useStore
    -  StoreConsumer
    -  connect
+   -  isEvent
+   -  isStore
    -  [combine](#combine)
    -  [forward](#forward)
    -  Portal
@@ -35,6 +37,7 @@
    -  GlobalStore
       -  createGlobalStore
       -  GlobalStoreCtx
+      -  GlobalStoreProvider
       -  useGlobal
    -  Form
       -  [createForm](#createform)
