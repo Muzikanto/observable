@@ -9,12 +9,15 @@ export type IEffect<Req, Res, Err = Error> = {
 };
 
 class Effect<Req, Res, Err = Error> {
-   public done = createEvent<Res>();
-   public fail = createEvent<Err>();
-   public loading = createEvent<boolean>();
+   public done: IEvent<Res>;
+   public fail: IEvent<Err>;
+   public loading: IEvent<boolean>;
    protected handler: (params: Req) => Promise<Res>;
 
-   constructor(handler: (params: Req) => Promise<Res>) {
+   constructor(
+      handler: (params: Req) => Promise<Res>,
+      options?: { done?: IEvent<Res>; fail?: IEvent<Err>; loading?: IEvent<boolean> },
+   ) {
       this.handler = handler;
 
       // @ts-ignore
@@ -35,6 +38,11 @@ class Effect<Req, Res, Err = Error> {
                });
          });
       };
+
+      this.done = options && options.done ? options.done : createEvent<Res>();
+      this.fail = options && options.fail ? options.fail : createEvent<Err>();
+      this.loading = options && options.loading ? options.loading : createEvent<boolean>();
+
       this.call.done = this.done;
       this.call.fail = this.fail;
       this.call.loading = this.loading;
