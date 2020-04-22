@@ -18,7 +18,6 @@
    -  [combine](http://github.com/Muzikanto/observable/tree/master/examples/combine_stores.tsx)
    -  [createApi](http://github.com/Muzikanto/observable/tree/master/examples/create_api.tsx)
    -  [listen object value](http://github.com/Muzikanto/observable/tree/master/examples/listen_object_value.tsx)
-   -  [form with validation](http://github.com/Muzikanto/observable/tree/master/examples/form_with_validate)
    -  [use global store](http://github.com/Muzikanto/observable/tree/master/examples/global-store)
 -  [API](#api)
    -  [createStore](#createstore)
