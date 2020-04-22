@@ -1,6 +1,6 @@
 {
    "name": "@muzikanto/observable",
-   "version": "2.0.5",
+   "version": "3.0.0",
    "description": "The state manager",
    "license": "MIT",
    "maintainers": [
@@ -14,7 +14,6 @@
    "keywords": [
       "react",
       "observable",
-      "form",
       "store",
       "state-manager"
    ],
@@ -50,8 +49,7 @@
       "react": "16.12.0",
       "react-dom": "16.12.0",
       "@types/react": "16.9",
-      "@types/react-dom": "16.9",
-      "@types/yup": "0.26.33"
+      "@types/react-dom": "16.9"
    },
    "dependencies": {},
    "devDependencies": {

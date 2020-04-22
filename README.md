@@ -32,20 +32,19 @@
    -  isStore
    -  [combine](#combine)
    -  [forward](#forward)
-   -  Portal
    -  ErrorBoundary
    -  GlobalStore
       -  createGlobalStore
       -  GlobalStoreCtx
       -  GlobalStoreProvider
       -  useGlobal
-   -  Form
-      -  [createForm](#createform)
-      -  Form
-      -  useField
-      -  useFieldArray
-      -  ErrorMessage
 -  [License](#license)
+
+## Linked projects
+
+| name              | version                                                                                                                                | downloads                                                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `observable-form` | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form) | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form.svg)](https://www.npmjs.com/package/@muzikanto/observable-form) |
 
 <!-- /TOC -->
 
@@ -56,8 +55,6 @@
 -  listen store object part change
 -  create event and subscribe store to event
 -  create effect and subscribe events (done, fail, loading)
--  create form with yup validation
--  create your fields (partial rendering)
 -  override Event, Effect, Store if you need
 -  and more..
 
@@ -223,41 +220,6 @@ function forward<P>(
    from: IEvent<P>,
    to: IEvent<P> | Array<IEvent<P>>,
 ): (() => void) | (Array<() => void>);
-```
-
-### createForm
-
-with yup validation
-
-```typescript jsx
-function createForm<State extends object>(params: FormParams<State>): FormConfig<State>;
-
-interface FormParams<State extends object> {
-   initialState: State;
-   initialErrors?: FormErrors<State>;
-   initialTouched?: FormTouched<State>;
-   validationSchema?: Schema<Partial<State>>; // Schema => yup.Schema
-
-   validateOnCreate?: boolean;
-
-   onSubmit?: (state: State) => void;
-}
-
-interface FormConfig<State extends object> {
-   values: Store<State>;
-   errors: Store<FormErrors<State>>;
-   touched: Store<FormTouched<State>>;
-   isValid: Store<boolean>;
-
-   setValue: IEvent<{ key: string; value: any; validate?: boolean }>;
-   setError: IEvent<{ key: string; value: string | undefined }>;
-   setTouched: IEvent<{ key: string; value: boolean }>;
-
-   submit: IEvent<void>;
-   reset: IEvent<void>;
-   validate: IEvent<void>;
-   validateAt: (key: string) => void;
-}
 ```
 
 ### useStore
