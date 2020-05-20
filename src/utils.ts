@@ -1,5 +1,5 @@
 function deepCopy<S>(state: S): S {
-   if (typeof state !== 'object' || state instanceof Date) {
+   if (typeof state !== 'object' || state instanceof Date || state === null) {
       return state;
    }
 
