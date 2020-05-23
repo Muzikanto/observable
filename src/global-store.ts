@@ -7,13 +7,14 @@ const isServer = typeof window === 'undefined';
 function createGlobalStore<S = {}>(
    func: (initialState: Partial<S>) => Store<S>,
    initialState: Partial<S> = {},
+   replace?: boolean,
 ): Store<S> {
    if (isServer) {
       return func(initialState);
    }
 
    // @ts-ignore
-   if (!window[__OBSERVABLE_GLOBAL_STORE__]) {
+   if (!window[__OBSERVABLE_GLOBAL_STORE__] || replace) {
       // @ts-ignore
       window[__OBSERVABLE_GLOBAL_STORE__] = func(initialState);
    }
