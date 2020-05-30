@@ -10,3 +10,4 @@ jest.config.js
 coverage
 .prettierrc.json
 examples
+package-lock.json
