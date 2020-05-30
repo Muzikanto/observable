@@ -56,6 +56,7 @@
 -  listen store object part change
 -  create event and subscribe store to event
 -  create effect and subscribe events (done, fail, loading)
+-  async store parts with combineAsync
 -  override Event, Effect, Store if you need
 -  and more..
 
@@ -124,8 +125,8 @@ storeLoading.on(effect.loading, (_, payload) => payload);
 
 // call
 event({ param: 1 })
-   .then(response => console.log(response))
-   .catch(err => console.log(err));
+   .then((response) => console.log(response))
+   .catch((err) => console.log(err));
 ```
 
 ### example combine
@@ -245,7 +246,7 @@ function combineAsync<Map extends { [key: string]: any }, S = Map>(
 function forward<P>(
    from: IEvent<P>,
    to: IEvent<P> | Array<IEvent<P>>,
-): (() => void) | (Array<() => void>);
+): (() => void) | Array<() => void>;
 ```
 
 ### useStore

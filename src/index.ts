@@ -15,3 +15,5 @@ export * from './ErrorBoundary';
 export * from './isEvent';
 export * from './isStore';
 export * from './StoreConsumer';
+export * from './combine';
+export * from './combineAsync';
