@@ -1,4 +1,4 @@
-## Observable and Observable-form
+## Observable
 
 [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable)
 [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable.svg)](https://www.npmjs.com/package/@muzikanto/observable)
@@ -19,7 +19,6 @@
    -  [combineAsync](#example-combineasync)
    -  [createApi](http://github.com/Muzikanto/observable/tree/master/examples/create_api.tsx)
    -  [listen object value](http://github.com/Muzikanto/observable/tree/master/examples/listen_object_value.tsx)
-   -  [use global store](http://github.com/Muzikanto/observable/tree/master/examples/global-store)
 -  [API](#api)
    -  [createStore](#createstore)
    -  [createEvent](#createevent)
@@ -33,21 +32,16 @@
    -  connect
    -  isEvent
    -  isStore
-   -  ErrorBoundary
-   -  GlobalStore
-      -  createGlobalStore
-      -  GlobalStoreCtx
-      -  GlobalStoreProvider
-      -  useGlobal
 -  [License](#license)
+
+<!-- /TOC -->
 
 ## Linked projects
 
-| name              | version                                                                                                                                | downloads                                                                                                                              |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `observable-form` | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form) | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form.svg)](https://www.npmjs.com/package/@muzikanto/observable-form) |
-
-<!-- /TOC -->
+| name                | version                                                                                                                                    | downloads                                                                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `observable-form`   | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form)     | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form.svg)](https://www.npmjs.com/package/@muzikanto/observable-form)     |
+| `observable-global` | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-global.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-global) | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-global.svg)](https://www.npmjs.com/package/@muzikanto/observable-global) |
 
 ## Introduction
 
@@ -67,6 +61,15 @@ npm i @muzikanto/observable
 # or
 yarn add @muzikanto/observable
 ```
+
+## Migrate 3.x.x > 4.x.x
+
+remove to [@muzikanto/observable-global](https://www.npmjs.com/package/@muzikanto/observable-global)
+
+-  createGlobalStore
+-  GlobalStoreCtx
+-  GlobalStoreProvider
+-  useGlobal
 
 ## Examples
 
