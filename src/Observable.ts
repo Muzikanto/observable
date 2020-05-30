@@ -24,6 +24,7 @@ class Observable<T> {
       if (this.value !== val) {
          const prev = this.value;
          this.value = val;
+
          this.listeners.forEach(l => l.event(l.selector ? l.selector(val) : val));
 
          setTimeout(() => {

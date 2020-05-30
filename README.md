@@ -16,6 +16,7 @@
    -  [request to api](http://github.com/Muzikanto/observable/tree/master/examples/request_to_api.tsx)
    -  [watch store, event](http://github.com/Muzikanto/observable/tree/master/examples/watch_changes.tsx)
    -  [combine](http://github.com/Muzikanto/observable/tree/master/examples/combine_stores.tsx)
+   -  [combineAsync](#example-combineasync)
    -  [createApi](http://github.com/Muzikanto/observable/tree/master/examples/create_api.tsx)
    -  [listen object value](http://github.com/Muzikanto/observable/tree/master/examples/listen_object_value.tsx)
    -  [use global store](http://github.com/Muzikanto/observable/tree/master/examples/global-store)
@@ -24,13 +25,14 @@
    -  [createEvent](#createevent)
    -  [createEffect](#createeffect)
    -  [createApi](#createapi)
+   -  [combine](#combine)
+   -  [combineAsync](#combineasync)
+   -  [forward](#forward)
    -  useStore
    -  StoreConsumer
    -  connect
    -  isEvent
    -  isStore
-   -  [combine](#combine)
-   -  [forward](#forward)
    -  ErrorBoundary
    -  GlobalStore
       -  createGlobalStore
@@ -143,6 +145,22 @@ const combinedStringStore = combine({ one, two }, ({ one, two }) => {
 combinedStringStore.get(); // Hello World
 ```
 
+### example combineAsync
+
+```typescript jsx
+const one = createStore(1);
+const two = createStore(2);
+const three = createStore(3);
+
+const combinedStore = combineAsync({ one, two });
+
+combinedStore.get(); // { one: 1, two: 2 }
+
+combinedStore.injectStore('three', three);
+
+combinedStringStore.get(); // { one: 1, two: 2, three: 3 }
+```
+
 ## Api
 
 ### createStore
@@ -209,7 +227,16 @@ type ApiEvents<S, A> = {
 function combine<Map extends { [key: string]: any }, S = Map>(
    map: { [k in keyof Map]: Store<Map[k]> },
    func?: (map: Map) => S,
-): Store<S>;
+): CombineStore<S>;
+```
+
+### combineAsync
+
+```typescript jsx
+function combineAsync<Map extends { [key: string]: any }, S = Map>(
+   map: { [k in keyof Map]: Store<Map[k]> },
+   func?: (map: Map) => S,
+): CombineAsyncStore<S>;
 ```
 
 ### forward
