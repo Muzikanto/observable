@@ -1,6 +1,6 @@
 {
    "name": "@muzikanto/observable",
-   "version": "4.0.2",
+   "version": "4.2.0",
    "description": "The state manager",
    "license": "MIT",
    "maintainers": [

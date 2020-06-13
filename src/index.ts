@@ -12,3 +12,5 @@ export * from './isStore';
 export * from './StoreConsumer';
 export * from './combine';
 export * from './combineAsync';
+export * from './createDomain';
+export * from './isEffect';

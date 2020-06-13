@@ -1,7 +1,7 @@
-import Event, {IEvent} from './Event';
+import Event, { IEvent } from './Event';
 
 function createEvent<P = void>(): IEvent<P> {
-    return new Event<P>().call;
+   return new Event<P>().call;
 }
 
 export default createEvent;

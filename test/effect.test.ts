@@ -1,102 +1,98 @@
-import createEffect from "../src/createEffect";
-import {IEffect} from "../src";
+import createEffect from '../src/createEffect';
+import { IEffect } from '../src';
 
 function request(time: number, err?: boolean) {
-    return new Promise(((resolve: (response: string) => void, reject: (err: string) => void) => {
-        setTimeout(() => {
-            if (err) {
-                reject('error');
-            }
+   return new Promise((resolve: (response: string) => void, reject: (err: string) => void) => {
+      setTimeout(() => {
+         if (err) {
+            reject('error');
+         }
 
-            resolve('response');
-        }, time);
-    }))
+         resolve('response');
+      }, time);
+   });
 }
 
 function getEffect(err?: boolean) {
-    return createEffect(async (v: number) => {
-        try {
-            const response = await request(250, err);
+   return createEffect(async (v: number) => {
+      const response = await request(250, err);
 
-            return response;
-        } catch (e) {
-            throw e;
-        }
-    });
+      return response;
+   });
 }
 
 describe('Effect', () => {
-    let effect: IEffect<number, string>;
+   let effect: IEffect<number, string>;
 
-    describe('success', () => {
-        beforeEach(() => {
-            effect = getEffect();
-        });
+   describe('success', () => {
+      beforeEach(() => {
+         effect = getEffect();
+      });
 
-        it('base', async () => {
-            const data = await effect(1);
+      it('base', async () => {
+         const data = await effect(1);
 
-            expect(data).toBe('response');
-        });
+         expect(data).toBe('response');
+      });
 
-        it('done watch', async () => {
+      it('done watch', async () => {
+         await effect(1);
+
+         effect.done.watch((response) => {
+            expect(response).toBe('response');
+         });
+      });
+
+      it('loading', async () => {
+         let arr: boolean[] = [];
+
+         effect.loading.watch((loading) => {
+            arr.push(loading);
+         });
+
+         try {
             await effect(1);
+         } catch (e) {}
 
-            effect.done.watch((response) => {
-                expect(response).toBe('response');
-            });
-        });
+         expect(arr).toEqual([true, false]);
+      });
+   });
 
-        it('loading', async () => {
-            let arr: boolean[] = [];
+   describe('fail', () => {
+      beforeEach(() => {
+         effect = getEffect(true);
+      });
 
-            effect.loading.watch((loading) => {
-                arr.push(loading);
-            });
+      it('base', async () => {
+         try {
+            await effect(1);
+         } catch (e) {
+            expect(e).toBe('error');
+         }
+      });
 
-            try {
-                await effect(1);
-            } catch (e) {}
+      it('fail watch', async () => {
+         effect.fail.watch((error) => {
+            expect(error).toBe('error');
+         });
 
-            expect(arr).toEqual([true, false]);
-        });
-    });
+         try {
+            await effect(1);
+         } catch (e) {}
+      });
 
-    describe('fail', () => {
-        beforeEach(() => {
-            effect = getEffect(true);
-        });
+      it('loading', async () => {
+         let arr: boolean[] = [];
 
-        it('base', async () => {
-            try {
-                await effect(1);
-            } catch (e) {
-                expect(e).toBe('error');
-            }
-        });
+         effect.loading.watch((loading) => {
+            arr.push(loading);
+         });
 
-        it('fail watch', async () => {
-            effect.fail.watch((error) => {
-                expect(error).toBe('error');
-            });
+         try {
+            await effect(1);
+         } catch (e) {}
 
-            try {
-                await effect(1);
-            } catch (e) {}
-        });
-
-        it('loading', async () => {
-            let arr: boolean[] = [];
-
-            effect.loading.watch((loading) => {
-                arr.push(loading);
-            });
-
-            try {
-                await effect(1);
-            } catch (e) {}
-
-            expect(arr).toEqual([true, false]);
-        });
-    });
+         expect(arr).toEqual([true, false]);
+      });
+   });
 });

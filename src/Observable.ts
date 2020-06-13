@@ -25,10 +25,10 @@ class Observable<T> {
          const prev = this.value;
          this.value = val;
 
-         this.listeners.forEach(l => l.event(l.selector ? l.selector(val) : val));
+         this.listeners.forEach((l) => l.event(l.selector ? l.selector(val) : val));
 
          setTimeout(() => {
-            this.watchers.forEach(l => l(val, prev));
+            this.watchers.forEach((l) => l(val, prev));
          }, 0);
       }
    }
@@ -37,7 +37,7 @@ class Observable<T> {
       this.listeners.push({ event: listener, selector });
 
       return () => {
-         this.listeners = this.listeners.filter(l => l.event !== listener);
+         this.listeners = this.listeners.filter((l) => l.event !== listener);
       };
    }
 
@@ -57,7 +57,7 @@ class Observable<T> {
       this.watchers.push(handler);
 
       return () => {
-         this.watchers = this.watchers.filter(l => l !== handler);
+         this.watchers = this.watchers.filter((l) => l !== handler);
       };
    }
 }

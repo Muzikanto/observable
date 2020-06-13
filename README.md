@@ -218,7 +218,7 @@ function createApi<S, A extends { [key: string]: (state: S, payload: any) => S }
    api: A,
 ): Api<S, A>;
 
-type Api<S, A extends { [key: string]: (state: S, payload: any) => S }> = ApiEvents<S, A> & {
+type Api<S, A extends { [key: string]: (store: Store<S>, payload: any) => S }> = ApiEvents<S, A> & {
    store: Store<S>;
 };
 

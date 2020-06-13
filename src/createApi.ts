@@ -1,34 +1,34 @@
-import createStore from "./createStore";
-import {Store} from "./Observable";
-import createEvent from "./createEvent";
-import {IEvent} from "./Event";
+import { Store } from './Observable';
+import createEvent from './createEvent';
+import { IEvent } from './Event';
 
 type ApiEvents<S, A> = {
-    [K in keyof A]: A[K] extends (store: S, e: infer E) => S ? IEvent<E> : any
-}
+   [K in keyof A]: A[K] extends (store: S, e: infer E) => S ? IEvent<E> : any;
+};
 
-export type Api<S, A extends { [key: string]: (state: S, payload: any) => S }> =
-    ApiEvents<S, A>
-    & { store: Store<S>; };
+export type Api<S, A extends { [key: string]: (state: S, payload: any) => S }> = ApiEvents<S, A> & {
+   store: Store<S>;
+};
 
-function createApi<S, A extends { [key: string]: (state: S, payload: any) => S }>(state: S, api: A): Api<S, A> {
-    const store = createStore(state);
+function createApi<S, A extends { [key: string]: (state: S, payload: any) => S }>(
+   store: Store<S>,
+   api: A,
+): Api<S, A> {
+   const events = Object.keys(api).reduce((acc: ApiEvents<S, A>, key: keyof A) => {
+      const event = createEvent();
 
-    const events = Object.keys(api).reduce((acc: ApiEvents<S, A>, key: keyof A) => {
-        const event = createEvent();
+      store.on(event, api[key]);
 
-        store.on(event, api[key]);
+      return {
+         ...acc,
+         [key]: event,
+      };
+   }, {} as ApiEvents<S, A>);
 
-        return {
-            ...acc,
-            [key]: event,
-        };
-    }, {} as ApiEvents<S, A>);
-
-    return {
-        store,
-        ...events,
-    };
+   return {
+      store,
+      ...events,
+   };
 }
 
 export default createApi;

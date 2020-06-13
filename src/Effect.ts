@@ -3,6 +3,7 @@ import { IEvent } from './Event';
 
 export type IEffect<Req, Res, Err = Error> = {
    (request: Req): Promise<Res>;
+   id: string;
    done: IEvent<Res>;
    fail: IEvent<Err>;
    loading: IEvent<boolean>;
@@ -26,12 +27,12 @@ class Effect<Req, Res, Err = Error> {
 
          return new Promise((resolve: (response: Res) => void, reject: (err: Err) => void) => {
             this.handler(request)
-               .then(response => {
+               .then((response) => {
                   this.done(response);
                   this.loading(false);
                   resolve(response);
                })
-               .catch(err => {
+               .catch((err) => {
                   this.fail(err);
                   this.loading(false);
                   reject(err);
@@ -43,9 +44,7 @@ class Effect<Req, Res, Err = Error> {
       this.fail = options && options.fail ? options.fail : createEvent<Err>();
       this.loading = options && options.loading ? options.loading : createEvent<boolean>();
 
-      this.call.done = this.done;
-      this.call.fail = this.fail;
-      this.call.loading = this.loading;
+      Object.assign(this.call, this);
    }
 
    public call: IEffect<Req, Res, Err>;

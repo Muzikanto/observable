@@ -2,6 +2,7 @@ import { Listener } from './Observable';
 
 export type IEvent<P = void> = {
    (payload: P): void;
+   id: string;
    watch: (watcher: Listener<P>) => () => void;
 };
 
@@ -13,16 +14,17 @@ class Event<P = void> {
    constructor() {
       // @ts-ignore
       this.call = (payload: P) => {
-         this.listeners.forEach(l => l(payload));
+         this.listeners.forEach((l) => l(payload));
       };
-      this.call.watch = this.watch;
+
+      Object.assign(this.call, this);
    }
 
    public watch = (watcher: Listener<P>) => {
       this.listeners.push(watcher);
 
       return () => {
-         this.listeners = this.listeners.filter(l => l !== watcher);
+         this.listeners = this.listeners.filter((l) => l !== watcher);
       };
    };
 }
