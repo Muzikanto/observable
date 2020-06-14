@@ -27,6 +27,7 @@
    -  [combine](#combine)
    -  [combineAsync](#combineasync)
    -  [forward](#forward)
+   -  [timer](#timer)
    -  useStore
    -  StoreConsumer
    -  connect
@@ -167,6 +168,40 @@ combinedStore.injectStore('three', three);
 combinedStringStore.get(); // { one: 1, two: 2, three: 3 }
 ```
 
+### example timer
+
+```typescript jsx
+// change on timeout
+(async () => {
+   const store = createStore(1);
+   const ev = createEvent<number>();
+   store.on(ev, (state, payload) => state + payload);
+
+   const runTimer = timer(ev, 200);
+
+   runTimer(2);
+   await wait(200); // wait timeout change to 3
+
+   store.get(); // 3
+})()(
+   // change on interval
+   async () => {
+      const store = createStore(1);
+      const ev = createEvent<number>();
+      store.on(ev, (state, payload) => state + payload);
+
+      const runTimer = timer(ev, 200, 100);
+
+      runTimer(2);
+      await wait(200); // wait timeout
+      await wait(100); // wait interval 1, change to 3
+      await wait(100); // wait interval 2, change to 5
+
+      store.get(); // 5
+   },
+)();
+```
+
 ## Api
 
 ### createStore
@@ -252,6 +287,16 @@ function forward<P>(
    from: IEvent<P>,
    to: IEvent<P> | Array<IEvent<P>>,
 ): (() => void) | Array<() => void>;
+```
+
+### timer
+
+```typescript jsx
+export type Timer<R> = IEvent<R> & {
+   disable: () => void;
+};
+
+function timer<R>(event: IEvent<R>, timeout: number, interval?: number): Timer<R>;
 ```
 
 ### useStore

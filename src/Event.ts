@@ -2,7 +2,6 @@ import { Listener } from './Observable';
 
 export type IEvent<P = void> = {
    (payload: P): void;
-   id: string;
    watch: (watcher: Listener<P>) => () => void;
 };
 

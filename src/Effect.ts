@@ -3,7 +3,6 @@ import { IEvent } from './Event';
 
 export type IEffect<Req, Res, Err = Error> = {
    (request: Req): Promise<Res>;
-   id: string;
    done: IEvent<Res>;
    fail: IEvent<Err>;
    loading: IEvent<boolean>;
