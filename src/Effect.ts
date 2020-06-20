@@ -24,7 +24,7 @@ class Effect<Req, Res, Err = Error> {
       this.call = (request: Req) => {
          this.loading(true);
 
-         return new Promise((resolve: (response: Res) => void, reject: (err: Err) => void) => {
+         return new Promise((resolve: (response: Res) => void) => {
             this.handler(request)
                .then((response) => {
                   this.done(response);
@@ -34,7 +34,6 @@ class Effect<Req, Res, Err = Error> {
                .catch((err) => {
                   this.fail(err);
                   this.loading(false);
-                  reject(err);
                });
          });
       };
