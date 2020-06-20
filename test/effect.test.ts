@@ -63,6 +63,12 @@ describe('Effect', () => {
          effect = getEffect(true);
       });
 
+      it('base', async () => {
+         effect(1).then(() => {
+            expect(true).toBe(true);
+         });
+      });
+
       it('fail watch', async () => {
          effect.fail.watch((error) => {
             expect(error).toBe('error');

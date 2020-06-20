@@ -24,18 +24,19 @@ class Effect<Req, Res, Err = Error> {
       this.call = (request: Req) => {
          this.loading(true);
 
-         return new Promise((resolve: (response: Res) => void) => {
-            this.handler(request)
-               .then((response) => {
-                  this.done(response);
-                  this.loading(false);
-                  resolve(response);
-               })
-               .catch((err) => {
-                  this.fail(err);
-                  this.loading(false);
-               });
-         });
+         return this.handler(request)
+            .then((response) => {
+               this.done(response);
+               this.loading(false);
+
+               return response;
+            })
+            .catch((err) => {
+               this.fail(err);
+               this.loading(false);
+
+               return err;
+            });
       };
 
       this.done = options && options.done ? options.done : createEvent<Res>();
