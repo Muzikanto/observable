@@ -77,13 +77,10 @@ describe('Effect', () => {
 
       it('no cache', async () => {
          let v = 0;
-         const cachebleEffect = createEffect(
-            async () => {
-               v++;
-               return v;
-            },
-            { cache: true },
-         );
+         const cachebleEffect = createEffect(async () => {
+            v++;
+            return v;
+         });
 
          const data = await cachebleEffect(1);
          expect(data).toEqual(1);
