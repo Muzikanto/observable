@@ -13,16 +13,60 @@ class Effect<Req, Res, Err = Error> {
    public fail: IEvent<Err>;
    public loading: IEvent<boolean>;
    protected handler: (params: Req) => Promise<Res>;
+   protected callAt: Date | undefined = undefined;
+   protected cacheData: Res | undefined = undefined;
+   protected cacheTime: number = 60000;
 
    constructor(
       handler: (params: Req) => Promise<Res>,
-      options?: { done?: IEvent<Res>; fail?: IEvent<Err>; loading?: IEvent<boolean> },
+      options?: {
+         done?: IEvent<Res>;
+         fail?: IEvent<Err>;
+         loading?: IEvent<boolean>;
+         cache?: boolean;
+         cacheTime?: number;
+      },
    ) {
       this.handler = handler;
+      const cacheble = options && options.cache;
+
+      if (options && typeof options.cacheTime !== 'undefined') {
+         this.cacheTime = options.cacheTime;
+      }
 
       // @ts-ignore
       this.call = (request: Req) => {
          this.loading(true);
+
+         if (cacheble) {
+            if (
+               typeof this.callAt === 'undefined' ||
+               typeof this.cacheData === 'undefined' ||
+               (this.callAt && new Date().getTime() - this.callAt.getTime() > this.cacheTime)
+            ) {
+               return this.handler(request)
+                  .then((response) => {
+                     this.cacheData = response;
+                     this.callAt = new Date();
+
+                     this.done(response);
+                     this.loading(false);
+
+                     return response;
+                  })
+                  .catch((err) => {
+                     this.fail(err);
+                     this.loading(false);
+
+                     return err;
+                  });
+            } else {
+               this.done(this.cacheData);
+               this.loading(false);
+
+               return this.cacheData;
+            }
+         }
 
          return this.handler(request)
             .then((response) => {

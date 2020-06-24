@@ -53,6 +53,7 @@
 -  listen store object part change
 -  create event and subscribe store to event
 -  create effect and subscribe events (done, fail, loading)
+-  create cacheable effect
 -  async store parts with combineAsync
 -  override Event, Effect, Store if you need
 -  and more..
@@ -113,16 +114,19 @@ store.reset(); // 1
 ```typescript
 type Request = { param: number };
 
-// create
-const effect = createEffect<Request, Response, Error>(async (params: Request) => {
-   try {
-      const response = await axios.get('https://example.com', { params });
+// create cachable effect
+const effect = createEffect<Request, Response, Error>(
+   async (params: Request) => {
+      try {
+         const response = await axios.get('https://example.com', { params });
 
-      return response;
-   } catch (e) {
-      throw e;
-   }
-});
+         return response;
+      } catch (e) {
+         throw e;
+      }
+   },
+   { cache: true, cacheTime: 60000 },
+);
 
 // subscribe in store
 storeDone.on(effect.done, (_, payload) => payload);
@@ -130,7 +134,7 @@ storeFail.on(effect.fail, (_, payload) => payload);
 storeLoading.on(effect.loading, (_, payload) => payload);
 
 // call
-event({ param: 1 })
+effect({ param: 1 })
    .then((response) => console.log(response))
    .catch((err) => console.log(err));
 ```
@@ -235,6 +239,13 @@ type IEvent<P = void> = {
 ```typescript
 function createEffect<Req, Res, Err = Error>(
    handler: (params: Req) => Promise<Res>,
+   options?: {
+      done?: IEvent<Res>;
+      fail?: IEvent<Err>;
+      loading?: IEvent<boolean>;
+      cache?: boolean;
+      cacheTime?: number;
+   },
 ): IEffect<Req, Res, Err>;
 
 type IEffect<Req, Res, Err = Error> = {

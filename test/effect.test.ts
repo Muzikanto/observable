@@ -56,6 +56,42 @@ describe('Effect', () => {
 
          expect(arr).toEqual([true, false]);
       });
+
+      it('cache', async () => {
+         let v = 0;
+         const cachebleEffect = createEffect(
+            async () => {
+               v++;
+               return v;
+            },
+            { cache: true },
+         );
+
+         const data = await cachebleEffect(1);
+         expect(data).toEqual(1);
+         const data2 = await cachebleEffect(1);
+         expect(data2).toEqual(1);
+         const data3 = await cachebleEffect(1);
+         expect(data3).toEqual(1);
+      });
+
+      it('no cache', async () => {
+         let v = 0;
+         const cachebleEffect = createEffect(
+            async () => {
+               v++;
+               return v;
+            },
+            { cache: true },
+         );
+
+         const data = await cachebleEffect(1);
+         expect(data).toEqual(1);
+         const data2 = await cachebleEffect(1);
+         expect(data2).toEqual(2);
+         const data3 = await cachebleEffect(1);
+         expect(data3).toEqual(3);
+      });
    });
 
    describe('fail', () => {
