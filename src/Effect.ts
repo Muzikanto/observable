@@ -76,8 +76,6 @@ class Effect<Req, Res, Err = Error> {
             .catch((err) => {
                this.fail(err);
                this.loading(false);
-
-               return err;
             });
       };
 
