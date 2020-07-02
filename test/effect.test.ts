@@ -97,9 +97,11 @@ describe('Effect', () => {
       });
 
       it('base', async () => {
-         effect(1).then(() => {
-            expect(true).toBe(true);
-         });
+         effect(1)
+            .then(() => {
+               throw Error('reject');
+            })
+            .catch(() => expect(true).toBe(true));
       });
 
       it('fail watch', async () => {
@@ -109,7 +111,9 @@ describe('Effect', () => {
 
          try {
             await effect(1);
-         } catch (e) {}
+         } catch (e) {
+            expect(true).toBe(true);
+         }
       });
 
       it('loading', async () => {
