@@ -19,23 +19,28 @@ class Effect<Req, Res, Err = Error> {
 
    constructor(
       handler: (params: Req) => Promise<Res>,
-      options?: {
+      options: {
          done?: IEvent<Res>;
          fail?: IEvent<Err>;
          loading?: IEvent<boolean>;
          cache?: boolean;
          cacheTime?: number;
-      },
+         ssr?: boolean;
+      } = {},
    ) {
       this.handler = handler;
-      const cacheble = options && options.cache;
+      const cacheble = options.cache;
 
-      if (options && typeof options.cacheTime !== 'undefined') {
+      if (typeof options.cacheTime !== 'undefined') {
          this.cacheTime = options.cacheTime;
       }
 
       // @ts-ignore
       this.call = (request: Req) => {
+         if (options.ssr === false) {
+            return Promise.resolve();
+         }
+
          this.loading(true);
 
          if (cacheble) {
@@ -83,9 +88,9 @@ class Effect<Req, Res, Err = Error> {
             });
       };
 
-      this.done = options && options.done ? options.done : createEvent<Res>();
-      this.fail = options && options.fail ? options.fail : createEvent<Err>();
-      this.loading = options && options.loading ? options.loading : createEvent<boolean>();
+      this.done = options.done ? options.done : createEvent<Res>();
+      this.fail = options.fail ? options.fail : createEvent<Err>();
+      this.loading = options.loading ? options.loading : createEvent<boolean>();
 
       Object.assign(this.call, this);
    }
