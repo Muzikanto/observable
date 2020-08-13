@@ -25,6 +25,8 @@ class Effect<Req, Res, Err = Error> {
          loading?: IEvent<boolean>;
          cache?: boolean;
          cacheTime?: number;
+         prepareErr?: (r: any) => Err;
+         prepareRes?: (r: any) => Res;
          ssr?: boolean;
       } = {},
    ) {
@@ -51,19 +53,18 @@ class Effect<Req, Res, Err = Error> {
             ) {
                return this.handler(request)
                   .then((response) => {
-                     this.cacheData = response;
+                     const r = options.prepareRes ? options.prepareRes(response) : response;
+                     this.cacheData = r;
                      this.callAt = new Date();
 
-                     this.done(response);
+                     this.done(r);
                      this.loading(false);
 
                      return response;
                   })
                   .catch((err) => {
-                     this.fail(err);
+                     this.fail(options.prepareErr ? options.prepareErr(err) : err);
                      this.loading(false);
-
-                     throw err;
                   });
             } else {
                this.done(this.cacheData);
@@ -75,16 +76,16 @@ class Effect<Req, Res, Err = Error> {
 
          return this.handler(request)
             .then((response) => {
-               this.done(response);
+               const r = options.prepareRes ? options.prepareRes(response) : response;
+
+               this.done(r);
                this.loading(false);
 
                return response;
             })
             .catch((err) => {
-               this.fail(err);
+               this.fail(options.prepareErr ? options.prepareErr(err) : err);
                this.loading(false);
-
-               throw err;
             });
       };
 
