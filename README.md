@@ -39,12 +39,9 @@
 
 ## Linked projects
 
-| name                       | version                                                                                                                                                  | downloads                                                                                                                                                |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `observable-global`        | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-global.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-global)               | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-global.svg)](https://www.npmjs.com/package/@muzikanto/observable-global)               |
-| `observable-persist`       | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-persist.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-persist)             | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-persist.svg)](https://www.npmjs.com/package/@muzikanto/observable-persist)             |
-| `observable-form`          | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form)                   | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form.svg)](https://www.npmjs.com/package/@muzikanto/observable-form)                   |
-| `observable-form-material` | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form-material.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form-material) | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form-material.svg)](https://www.npmjs.com/package/@muzikanto/observable-form-material) |
+| name              | version                                                                                                                                | downloads                                                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `observable-form` | [![npm version](https://badge.fury.io/js/%40muzikanto%2Fobservable-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fobservable-form) | [![downloads](https://img.shields.io/npm/dm/@muzikanto/observable-form.svg)](https://www.npmjs.com/package/@muzikanto/observable-form) |
 
 ## Introduction
 
