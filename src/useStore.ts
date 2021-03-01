@@ -10,6 +10,12 @@ function useStore<S, V = S>(store: Store<S>, selector?: (state: S) => V): V {
       return store.subscribe(setVal, selector);
    }, [store]);
 
+   React.useEffect(() => {
+      return () => {
+         store.clearTimeouts();
+      };
+   }, [store]);
+
    return val as V;
 }
 

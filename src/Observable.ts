@@ -10,6 +10,7 @@ class Observable<T> {
    protected initialValue: T;
    protected value: T;
    protected watchers: Array<Watcher<T>> = [];
+   protected timeouts: any[] = [];
 
    constructor(value: T) {
       this.value = deepCopy(value);
@@ -27,9 +28,11 @@ class Observable<T> {
 
          this.listeners.forEach((l) => l.event(l.selector ? l.selector(val) : val));
 
-         setTimeout(() => {
+         const timeoutId = setTimeout(() => {
             this.watchers.forEach((l) => l(val, prev));
          }, 0);
+
+         this.timeouts.push(timeoutId);
       }
    }
 
@@ -59,6 +62,14 @@ class Observable<T> {
       return () => {
          this.watchers = this.watchers.filter((l) => l !== handler);
       };
+   }
+
+   public clearTimeouts() {
+      this.timeouts.forEach((el) => {
+         clearTimeout(el);
+      });
+
+      this.timeouts = [];
    }
 }
 
